@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nguyễn Tiêu AI - Trả Lời Tự Động</title>
+    <title>Nguyễn Tiêu AI - Hoạt Động</title>
     <style>
-        /* --- GIỮ NGUYÊN CSS GIAO DIỆN SẾP THÍCH --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { min-height: 100vh; background: #02050a; color: white; overflow: hidden; position: relative; }
         #bg-wrap { position: absolute; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
@@ -24,6 +23,7 @@
         #ai-screen { position: fixed; inset: 0; z-index: 50; display: none; flex-direction: column; background: radial-gradient(circle at center, #0a192f 0%, #02050a 100%); opacity: 0; transition: 1s; }
         header { padding: 15px 20px; border-bottom: 1px solid rgba(0, 229, 255, 0.2); background: rgba(0,0,0,0.4); display: flex; justify-content: space-between; align-items: center; }
         header h1 { color: #00e5ff; font-size: 18px; letter-spacing: 2px; text-shadow: 0 0 10px #00e5ff; }
+        .clear-btn { background: none; border: 1px solid #ff0055; color: #ff0055; padding: 5px 12px; border-radius: 20px; cursor: pointer; font-size: 11px; }
 
         #chat-container { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
         .msg { max-width: 85%; padding: 12px 18px; border-radius: 20px; font-size: 14px; line-height: 1.6; animation: fadeIn 0.3s ease; }
@@ -39,7 +39,6 @@
     </style>
 </head>
 <body>
-
     <div id="bg-wrap"></div>
 
     <div id="login-screen">
@@ -58,15 +57,10 @@
         <header>
             <div style="width: 70px;"></div>
             <h1>NGUYỄN TIÊU AI</h1>
-            <button style="background:none; border:1px solid #ff0055; color:#ff0055; padding:5px 10px; border-radius:20px; cursor:pointer;" onclick="location.reload()">THOÁT</button>
+            <button class="clear-btn" onclick="location.reload()">THOÁT</button>
         </header>
-
         <div id="chat-container"></div>
-        
-        <div id="typing-box">
-            <span>Nguyễn Tiêu AI đang suy nghĩ...</span>
-        </div>
-
+        <div id="typing-box"><span>Đang phân tích...</span></div>
         <div class="chat-input-area">
             <input type="text" id="user-input" placeholder="Hỏi Nguyễn Tiêu AI...">
             <button id="send-btn" onclick="sendMessage()">➤</button>
@@ -74,9 +68,9 @@
     </div>
 
     <script>
-        // SỬA LẠI API KEY VÀ URL CHUẨN (Fix lỗi 404 Model Not Found)
+        // MÃ API LẤY TỪ ẢNH CỦA SẾP - KHÔNG CÓ KHOẢNG TRẮNG
         const API_KEY = "AIzaSyBZYI0kAVenAzKa3sbNSXKCHCOKcKI02os"; 
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+        const API_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
         window.onload = () => { createStars(); };
 
@@ -100,7 +94,7 @@
                     document.getElementById('ai-screen').style.display = "flex";
                     setTimeout(() => { document.getElementById('ai-screen').style.opacity = "1"; }, 50);
                 }, 800);
-            } else { alert("Sai thông tin rồi sếp!"); }
+            } else { alert("Thông tin sai sếp ơi!"); }
         }
 
         function addMessage(text, className) {
@@ -127,24 +121,20 @@
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
                 });
-                
                 const data = await response.json();
                 document.getElementById('typing-box').style.display = "none";
-
-                if (data.candidates && data.candidates[0].content) {
+                if (data.candidates) {
                     addMessage(data.candidates[0].content.parts[0].text, 'ai-msg');
                 } else {
-                    addMessage("Lỗi từ Google: " + (data.error ? data.error.message : "Không xác định"), 'ai-msg');
+                    addMessage("Google báo: " + data.error.message, 'ai-msg');
                 }
             } catch (e) {
                 document.getElementById('typing-box').style.display = "none";
-                addMessage("Lỗi kết nối! Sếp kiểm tra lại mã API hoặc mạng nhé.", 'ai-msg');
+                addMessage("Lỗi kết nối nghiêm trọng rồi sếp!", 'ai-msg');
             }
         }
 
-        document.getElementById('user-input').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
+        document.getElementById('user-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
     </script>
 </body>
 </html>
