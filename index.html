@@ -4,329 +4,176 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PANEL NGUYỄN TIÊU DEV</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
         body {
             min-height: 100vh;
             display: flex; justify-content: center; align-items: center;
-            /* Nền Vũ trụ ảo với hiệu ứng chuyển động */
-            background: radial-gradient(circle at center, #2a0050, #000000);
+            background: #050505;
             overflow: hidden;
-            position: relative;
+            perspective: 1000px; /* Cần thiết cho hiệu ứng 3D */
         }
 
-        /* Canvas cho nền vũ trụ chuyển động */
-        #bgCanvas {
+        /* Nền lấp lánh nhẹ phía sau */
+        .bg-glow {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(0, 255, 128, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(80px);
             z-index: 0;
-            opacity: 0.8;
+            transition: 0.1s;
         }
 
-        /* Hộp kính Neumorphic 3D */
-        .neumorphic-glass-box {
+        /* Hộp Glass 3D */
+        .card-3d {
             position: relative;
-            width: 450px;
-            padding: 45px;
-            background: rgba(255, 255, 255, 0.05); /* Rất trong suốt */
+            width: 400px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 50px;
-            box-shadow: 
-                0 15px 35px rgba(0, 0, 0, 0.5), /* Đổ bóng sâu bên dưới */
-                inset 0 0 10px rgba(255, 255, 255, 0.1), /* Ánh sáng mờ bên trong */
-                inset 0 0 0 1px rgba(255, 255, 255, 0.05); /* Viền mờ */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
             z-index: 10;
-            overflow: hidden;
-            transform-style: preserve-3d; /* Kích hoạt không gian 3D */
-            transition: transform 0.5s ease-out; /* Hiệu ứng nghiêng khi di chuột */
-        }
-
-        /* Dải phản xạ ánh sáng mạnh mẽ */
-        .neumorphic-glass-box::before {
-            content: '';
-            position: absolute;
-            top: -100%; left: -100%;
-            width: 300%; height: 300%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent, rgba(255, 255, 255, 0.05));
-            transform: rotate(45deg);
-            animation: cosmicShine 8s infinite cubic-bezier(0.8, 0.2, 0.2, 0.8); /* Hiệu ứng sáng mượt hơn */
-            pointer-events: none;
-            z-index: 1; /* Nằm trên lớp nền kính nhưng dưới chữ */
-        }
-
-        @keyframes cosmicShine {
-            0% { left: -150%; top: -150%; }
-            50% { left: 50%; top: 50%; }
-            100% { left: -150%; top: -150%; }
-        }
-
-        /* Hiệu ứng hạt tương tác */
-        #interactiveParticles {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 5;
-            pointer-events: none;
-        }
-
-        /* Tiêu đề hệ thống */
-        .sys-info-header {
-            display: flex; justify-content: space-between; align-items: center;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 11px; margin-bottom: 25px;
-            position: relative; z-index: 10;
-        }
-
-        /* Clock và Ngày tháng */
-        #current-time {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 13px; font-weight: 300;
-            margin-bottom: 20px;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
             text-align: center;
-            position: relative; z-index: 10;
+        }
+
+        /* Ánh sáng chạy trên viền cực mỏng */
+        .card-3d::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 40px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent, rgba(255,255,255,0.1));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .header-info {
+            display: flex; justify-content: space-between;
+            font-size: 10px; color: rgba(255,255,255,0.4);
+            margin-bottom: 30px; letter-spacing: 1px;
+            transform: translateZ(20px); /* Nổi lên lớp 3D */
         }
 
         h2 { 
-            color: #fff; 
-            margin-bottom: 30px; 
-            font-weight: 500; 
-            letter-spacing: 2px; 
-            text-align: center; 
-            text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-            position: relative; z-index: 10;
+            color: #fff; font-size: 24px; font-weight: 600; 
+            margin-bottom: 8px; letter-spacing: -0.5px;
+            transform: translateZ(50px);
         }
 
-        .input-field {
-            width: 100%; padding: 18px 25px; margin-bottom: 15px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
-            outline: none; color: #fff; font-size: 16px;
-            transition: all 0.3s ease;
-            text-align: center;
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
-            position: relative; z-index: 10;
-        }
-        .input-field::placeholder { color: rgba(255, 255, 255, 0.5); }
-        .input-field:focus { 
-            background: rgba(255, 255, 255, 0.15); 
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 255, 255, 0.1);
+        #clock {
+            color: rgba(0, 255, 128, 0.8); font-size: 12px;
+            margin-bottom: 30px; transform: translateZ(30px);
         }
 
-        .action-btn {
-            width: 100%; padding: 18px; margin-top: 15px;
-            background: rgba(255, 255, 255, 0.9); 
-            color: #000; border: none;
-            border-radius: 30px; font-weight: bold; font-size: 16px;
-            cursor: pointer; transition: all 0.4s ease;
-            letter-spacing: 1px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            position: relative; z-index: 10;
-        }
-        .action-btn:hover { 
-            transform: translateY(-5px) scale(1.02); 
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.2);
-            background: #fff;
-        }
-
-        .social-icons {
-            margin-top: 35px; display: flex; justify-content: center; gap: 12px; width: 100%;
-            position: relative; z-index: 10;
-        }
-        .social-icons a {
-            text-decoration: none; color: rgba(255, 255, 255, 0.7); font-size: 12px;
+        .input-group { margin-bottom: 15px; transform: translateZ(40px); }
+        
+        input {
+            width: 100%; padding: 14px 20px;
             background: rgba(255, 255, 255, 0.05);
-            padding: 10px 18px; border-radius: 25px; 
-            transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 18px;
+            color: #fff; outline: none; transition: 0.3s;
+            font-size: 15px;
         }
-        .social-icons a:hover { 
-            color: #fff; 
-            background: rgba(255, 255, 255, 0.15); 
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        input:focus { background: rgba(255, 255, 255, 0.1); border-color: rgba(0, 255, 128, 0.4); }
+
+        .btn-login {
+            width: 100%; padding: 14px; margin-top: 10px;
+            background: #fff; color: #000;
+            border: none; border-radius: 18px;
+            font-weight: 600; cursor: pointer;
+            transition: 0.3s; transform: translateZ(60px);
         }
+        .btn-login:hover { background: #00ff80; transform: translateZ(70px) scale(1.02); }
+
+        .social-row {
+            margin-top: 35px; display: flex; justify-content: center; gap: 15px;
+            transform: translateZ(30px);
+        }
+        .social-row a {
+            color: rgba(255,255,255,0.5); text-decoration: none; font-size: 12px;
+            transition: 0.3s;
+        }
+        .social-row a:hover { color: #fff; }
+
     </style>
 </head>
 <body>
 
-    <canvas id="bgCanvas"></canvas>
-    <canvas id="interactiveParticles"></canvas>
+    <div class="bg-glow" id="glow"></div>
 
-    <div class="neumorphic-glass-box" id="glassBox">
-        <div class="sys-info-header">
-            <span id="battery-status">BATTERY: --%</span>
-            <span id="device-info">DEVICE: MOBILE_PRO</span>
+    <div class="card-3d" id="card">
+        <div class="header-info">
+            <span id="dev">DEVICE: IPHONE_V6</span>
+            <span id="bat">BATTERY: 100%</span>
         </div>
-        
-        <h2 style="margin-top: -10px;">PANEL LOGIN</h2>
-        <div id="current-time"></div>
 
-        <input type="text" placeholder="Username" autocomplete="off">
-        <input type="password" placeholder="Password">
-        
-        <button class="action-btn" onclick="alert('Kết nối thành công!')">ĐĂNG NHẬP</button>
+        <h2>PANEL LOGIN</h2>
+        <div id="clock">00:00:00</div>
 
-        <div class="social-icons">
-            <a href="https://www.facebook.com/share/1CTXMD4ctG/" target="_blank">FB</a>
-            <a href="https://tiktok.com/@nguyentieulive" target="_blank">TikTok</a>
-            <a href="https://zalo.me/0353564018" target="_blank">Zalo</a>
+        <div class="input-group">
+            <input type="text" placeholder="Username" autocomplete="off">
+        </div>
+        <div class="input-group">
+            <input type="password" placeholder="Password">
+        </div>
+
+        <button class="btn-login">LOGIN SYSTEM</button>
+
+        <div class="social-row">
+            <a href="#">Facebook</a>
+            <a href="#">TikTok</a>
+            <a href="#">Zalo</a>
         </div>
     </div>
 
     <script>
-        // --- NỀN VŨ TRỤ CHUYỂN ĐỘNG (BACKGROUND CANVAS) ---
-        const bgCanvas = document.getElementById('bgCanvas');
-        const bgCtx = bgCanvas.getContext('2d');
-        let bgWidth, bgHeight;
-        const setBgSize = () => { bgWidth = bgCanvas.width = window.innerWidth; bgHeight = bgCanvas.height = window.innerHeight; };
-        setBgSize(); window.onresize = setBgSize;
+        const card = document.getElementById('card');
+        const glow = document.getElementById('glow');
 
-        let particles = [];
-        const numParticles = 100;
-
-        for (let i = 0; i < numParticles; i++) {
-            particles.push({
-                x: Math.random() * bgWidth,
-                y: Math.random() * bgHeight,
-                radius: Math.random() * 2 + 1,
-                color: `hsla(${Math.random() * 360}, 100%, 70%, ${Math.random() * 0.5 + 0.2})`,
-                velocity: { x: (Math.random() - 0.5) * 0.5, y: (Math.random() - 0.5) * 0.5 }
-            });
-        }
-
-        function animateBackground() {
-            bgCtx.clearRect(0, 0, bgWidth, bgHeight);
-            particles.forEach(p => {
-                bgCtx.beginPath();
-                bgCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                bgCtx.fillStyle = p.color;
-                bgCtx.shadowBlur = 10;
-                bgCtx.shadowColor = p.color;
-                bgCtx.fill();
-
-                p.x += p.velocity.x;
-                p.y += p.velocity.y;
-
-                if (p.x < 0 || p.x > bgWidth) p.velocity.x *= -1;
-                if (p.y < 0 || p.y > bgHeight) p.velocity.y *= -1;
-            });
-            requestAnimationFrame(animateBackground);
-        }
-        animateBackground();
-
-        // --- HIỆU ỨNG HẠT TƯƠNG TÁC (INTERACTIVE PARTICLES) ---
-        const interactiveCanvas = document.getElementById('interactiveParticles');
-        const interactiveCtx = interactiveCanvas.getContext('2d');
-        let interactiveWidth, interactiveHeight;
-        const setInteractiveSize = () => { interactiveWidth = interactiveCanvas.width = window.innerWidth; interactiveHeight = interactiveCanvas.height = window.innerHeight; };
-        setInteractiveSize(); window.onresize = setInteractiveSize;
-
-        let mouse = { x: null, y: null };
-        window.addEventListener('mousemove', function(event) {
-            mouse.x = event.x;
-            mouse.y = event.y;
+        // Hiệu ứng 3D nghiêng theo chuột
+        document.addEventListener('mousemove', (e) => {
+            let xAxis = (window.innerWidth / 2 - e.pageX) / 20;
+            let yAxis = (window.innerHeight / 2 - e.pageY) / 20;
+            
+            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            
+            // Glow chạy theo chuột
+            glow.style.left = `${e.pageX - 250}px`;
+            glow.style.top = `${e.pageY - 250}px`;
         });
 
-        window.addEventListener('mouseout', function() {
-            mouse.x = null;
-            mouse.y = null;
+        // Trả về vị trí cũ khi chuột rời đi
+        document.addEventListener('mouseleave', () => {
+            card.style.transform = `rotateY(0deg) rotateX(0deg)`;
         });
 
-        let interactiveParticles = [];
-        const numInteractiveParticles = 100;
-
-        for (let i = 0; i < numInteractiveParticles; i++) {
-            interactiveParticles.push({
-                x: Math.random() * interactiveWidth,
-                y: Math.random() * interactiveHeight,
-                radius: Math.random() * 3 + 1,
-                color: `rgba(255, 255, 255, ${Math.random() * 0.7 + 0.3})`,
-                velocity: { x: (Math.random() - 0.5) * 0.8, y: (Math.random() - 0.5) * 0.8 }
-            });
-        }
-
-        function animateInteractiveParticles() {
-            interactiveCtx.clearRect(0, 0, interactiveWidth, interactiveHeight);
-            interactiveParticles.forEach(p => {
-                interactiveCtx.beginPath();
-                interactiveCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                interactiveCtx.fillStyle = p.color;
-                interactiveCtx.shadowBlur = 5;
-                interactiveCtx.shadowColor = p.color;
-                interactiveCtx.fill();
-
-                // Di chuyển hạt
-                p.x += p.velocity.x;
-                p.y += p.velocity.y;
-
-                // Xuyên tường
-                if (p.x < 0) p.x = interactiveWidth;
-                if (p.x > interactiveWidth) p.x = 0;
-                if (p.y < 0) p.y = interactiveHeight;
-                if (p.y > interactiveHeight) p.y = 0;
-
-                // Tương tác với chuột
-                if (mouse.x && mouse.y) {
-                    const dx = mouse.x - p.x;
-                    const dy = mouse.y - p.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < 100) { // Bán kính tương tác
-                        const forceDirectionX = dx / distance;
-                        const forceDirectionY = dy / distance;
-                        const force = (100 - distance) / 100; // Lực đẩy mạnh khi gần chuột
-                        p.x -= forceDirectionX * force * 2; // Đẩy hạt ra xa chuột
-                        p.y -= forceDirectionY * force * 2;
-                    }
-                }
-            });
-            requestAnimationFrame(animateInteractiveParticles);
-        }
-        animateInteractiveParticles();
-
-
-        // --- HIỆU ỨNG NGHIÊNG HỘP KÍNH THEO CHUỘT ---
-        const glassBox = document.getElementById('glassBox');
-        let sensitivity = 15; // Độ nhạy của hiệu ứng nghiêng
-
-        window.addEventListener('mousemove', (e) => {
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
-
-            const rotateX = ((e.clientY - centerY) / centerY) * sensitivity;
-            const rotateY = ((e.clientX - centerX) / centerX) * -sensitivity;
-
-            glassBox.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-        });
-
-        window.addEventListener('mouseout', () => {
-            glassBox.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
-        });
-
-
-        // --- CẬP NHẬT THÔNG TIN HỆ THỐNG (PIN, THỜI GIAN) ---
-        function updateSystemInfo() {
+        // Cập nhật giờ và pin
+        function update() {
             const now = new Date();
-            const timeStr = now.toLocaleTimeString('vi-VN') + " - " + now.toLocaleDateString('vi-VN');
-            document.getElementById('current-time').innerText = timeStr;
-
-            if (navigator.getBattery) {
-                navigator.getBattery().then(battery => {
-                    document.getElementById('battery-status').innerText = `BATTERY: ${Math.round(battery.level * 100)}%`;
+            document.getElementById('clock').innerText = now.toLocaleTimeString('vi-VN');
+            
+            if(navigator.getBattery) {
+                navigator.getBattery().then(b => {
+                    document.getElementById('bat').innerText = "BATTERY: " + Math.round(b.level * 100) + "%";
                 });
             }
         }
-        setInterval(updateSystemInfo, 1000);
-        updateSystemInfo();
+        setInterval(update, 1000);
+        update();
     </script>
 </body>
 </html>
