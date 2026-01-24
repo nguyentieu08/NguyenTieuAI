@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PANEL NGUYỄN TIÊU DEV</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
         body {
             min-height: 100vh;
             display: flex; justify-content: center; align-items: center;
-            /* Nền đổi màu liên tục cực ảo */
             background: linear-gradient(125deg, #2c3e50, #000000, #27ae60, #2980b9, #8e44ad);
             background-size: 400% 400%;
             animation: auroraBG 15s ease infinite;
@@ -24,10 +25,8 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Canvas cho các hạt bay lơ lửng */
         canvas { position: absolute; top: 0; left: 0; z-index: 1; pointer-events: none; }
 
-        /* Hộp kính mờ */
         .glass-box {
             position: relative;
             width: 420px;
@@ -36,13 +35,16 @@
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50px; /* Bo tròn cực mạnh */
+            border-radius: 50px;
             box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
             z-index: 10;
-            overflow: hidden; /* Để ẩn dải phản quang */
+            overflow: hidden;
+            /* Căn giữa nội dung bên trong */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        /* Hiệu ứng phản xạ ánh sáng chạy qua mặt kính */
         .glass-box::after {
             content: '';
             position: absolute;
@@ -60,12 +62,22 @@
         }
 
         .sys-header {
+            width: 100%;
             display: flex; justify-content: space-between;
             color: rgba(255, 255, 255, 0.7);
             font-size: 11px; margin-bottom: 20px;
         }
 
-        h2 { color: #fff; margin-bottom: 25px; font-weight: 300; letter-spacing: 2px; }
+        /* Chỗ này đã sửa để căn giữa tuyệt đối */
+        h2 { 
+            color: #fff; 
+            margin-bottom: 25px; 
+            font-weight: 600; 
+            letter-spacing: 3px; 
+            text-align: center; 
+            width: 100%;
+            text-transform: uppercase;
+        }
 
         input {
             width: 100%; padding: 16px 25px; margin-bottom: 15px;
@@ -74,6 +86,7 @@
             border-radius: 30px;
             outline: none; color: #fff; font-size: 16px;
             transition: 0.3s;
+            text-align: center; /* Để text input cũng cân giữa cho đẹp */
         }
         input:focus { background: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.5); }
 
@@ -82,16 +95,19 @@
             background: #fff; color: #000; border: none;
             border-radius: 30px; font-weight: bold; font-size: 16px;
             cursor: pointer; transition: 0.4s;
+            letter-spacing: 1px;
         }
         .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255, 255, 255, 0.2); }
 
         .social {
-            margin-top: 30px; display: flex; justify-content: center; gap: 15px;
+            margin-top: 30px; display: flex; justify-content: center; gap: 10px; width: 100%;
         }
         .social a {
-            text-decoration: none; color: #fff; font-size: 12px;
+            text-decoration: none; color: #fff; font-size: 11px;
             background: rgba(255, 255, 255, 0.1);
-            padding: 8px 18px; border-radius: 20px; transition: 0.3s;
+            padding: 8px 15px; border-radius: 20px; transition: 0.3s;
+            flex: 1; /* Chia đều các nút social */
+            text-align: center;
         }
         .social a:hover { background: #fff; color: #000; }
     </style>
@@ -105,7 +121,7 @@
             <span id="bat">BATTERY: --%</span>
             <span id="dev">DEVICE: MOBILE_PRO</span>
         </div>
-        <div id="clock" style="color:#fff; font-size: 14px; opacity: 0.5; margin-bottom: 10px;">00:00:00</div>
+        <div id="clock" style="color:#fff; font-size: 13px; opacity: 0.6; margin-bottom: 15px; text-align: center; width: 100%;">00:00:00</div>
 
         <h2>PANEL LOGIN</h2>
 
@@ -115,14 +131,13 @@
         <button class="btn" onclick="alert('Đã kết nối dữ liệu!')">ĐĂNG NHẬP</button>
 
         <div class="social">
-            <a href="https://www.facebook.com/share/1CTXMD4ctG/" target="_blank">Facebook</a>
+            <a href="https://www.facebook.com/share/1CTXMD4ctG/" target="_blank">FB</a>
             <a href="https://tiktok.com/@nguyentieulive" target="_blank">TikTok</a>
             <a href="https://zalo.me/0353564018" target="_blank">Zalo</a>
         </div>
     </div>
 
     <script>
-        // --- HIỆU ỨNG HẠT BAY (STARDUST) ---
         const canvas = document.getElementById('starField');
         const ctx = canvas.getContext('2d');
         let w, h;
@@ -135,13 +150,13 @@
                 x: Math.random() * w, y: Math.random() * h,
                 vx: (Math.random() - 0.5) * 1.5,
                 vy: (Math.random() - 0.5) * 1.5,
-                size: Math.random() * 3
+                size: Math.random() * 2.5
             });
         }
 
         function animate() {
             ctx.clearRect(0, 0, w, h);
-            ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+            ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
             stars.forEach(s => {
                 ctx.beginPath();
                 ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
@@ -154,10 +169,10 @@
         }
         animate();
 
-        // --- CẬP NHẬT HỆ THỐNG ---
         function update() {
             const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString('vi-VN') + " - " + now.toLocaleDateString('vi-VN');
+            const timeStr = now.toLocaleTimeString('vi-VN') + " | " + now.toLocaleDateString('vi-VN');
+            document.getElementById('clock').innerText = timeStr;
             if(navigator.getBattery) {
                 navigator.getBattery().then(b => {
                     document.getElementById('bat').innerText = "BATTERY: " + Math.round(b.level * 100) + "%";
