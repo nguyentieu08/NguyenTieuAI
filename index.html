@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BINARY_GLITCH_OVERRIDE</title>
+    <title>Panel Nguyễn Tiêu Dev</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', monospace; }
         body { background: #000; overflow: hidden; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
@@ -75,16 +75,16 @@
 
     <div class="border-animation">
         <div class="login-box">
-            <h2>CORE_LOGIN</h2>
+            <h2>LOGIN PANEL</h2>
             <div class="input-group">
-                <label>> SECURE_ID</label>
+                <label>> TÀI KHOẢN</label>
                 <input type="text" id="u" placeholder="admin" autocomplete="off">
             </div>
             <div class="input-group">
-                <label>> ENCRYPTED_KEY</label>
+                <label>> MẬT KHẨU</label>
                 <input type="password" id="p" placeholder="••••••••">
             </div>
-            <button onclick="auth()">EXECUTE_BYPASS</button>
+            <button onclick="auth()">ĐĂNG NHẬP</button>
             <div id="status"></div>
         </div>
     </div>
@@ -146,7 +146,7 @@
             setTimeout(() => {
                 if(document.getElementById('u').value === "admin" && document.getElementById('p').value === "123456") {
                     s.innerHTML += "> <span style='color:#fff'>AUTHENTICATION_SUCCESSFUL</span>";
-                    alert("Welcome to the Mainframe, Sếp!");
+                    alert("Đăng nhập thành công!");
                 } else {
                     s.innerHTML += "> <span style='color:#f00'>ACCESS_DENIED_INV_HASH</span>";
                 }
