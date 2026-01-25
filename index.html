@@ -2,298 +2,222 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NGUYỄN TIÊU AI | VERCEL SDK</title>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nguyễn Tiêu AI - Stable</title>
     <style>
         :root {
-            --v-black: #000;
-            --v-white: #fff;
-            --v-gray: #666;
-            --v-accents-1: #111;
-            --v-accents-2: #333;
-            --v-blue: #0070f3;
-            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --bg: #050505;
+            --surface: #121212;
+            --primary: #3b82f6;
+            --text: #ffffff;
+            --text-dim: #a1a1aa;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
-            background-color: var(--v-black);
-            color: var(--v-white);
-            font-family: var(--font-sans);
+            background: var(--bg);
+            color: var(--text);
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 0;
             display: flex;
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
         }
 
-        /* Vercel Header */
-        nav {
-            display: flex;
-            align-items: center;
-            padding: 0 24px;
-            height: 64px;
-            border-bottom: 1px solid var(--v-accents-2);
-            background: rgba(0,0,0,0.8);
+        header {
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid #333;
+            background: rgba(0,0,0,0.5);
             backdrop-filter: blur(10px);
-            z-index: 100;
         }
 
-        .triangle {
-            width: 0; height: 0;
-            border-left: 12px solid transparent;
-            border-right: 12px solid transparent;
-            border-bottom: 20px solid white;
-            margin-right: 15px;
-        }
-
-        .nav-title {
-            font-weight: 600;
-            font-size: 14px;
-            letter-spacing: -0.02em;
-        }
-
-        .badge {
-            background: var(--v-accents-2);
-            color: var(--v-gray);
-            font-size: 10px;
-            padding: 2px 8px;
-            border-radius: 10px;
-            margin-left: 10px;
-            text-transform: uppercase;
+        header h1 {
+            margin: 0;
+            font-size: 1.2rem;
+            background: linear-gradient(to right, #60a5fa, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         #chat-window {
             flex: 1;
             overflow-y: auto;
-            padding: 40px 20px;
-            max-width: 700px;
-            margin: 0 auto;
-            width: 100%;
+            padding: 1rem;
             display: flex;
             flex-direction: column;
-            gap: 32px;
-            scrollbar-width: thin;
+            gap: 1rem;
         }
 
-        #chat-window::-webkit-scrollbar { width: 4px; }
-        #chat-window::-webkit-scrollbar-thumb { background: var(--v-accents-2); }
-
-        .msg-container {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            animation: fadeIn 0.3s ease;
+        .msg {
+            max-width: 85%;
+            padding: 0.8rem 1rem;
+            border-radius: 1rem;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            word-wrap: break-word;
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } }
-
-        .role-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--v-gray);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .user {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 0.2rem;
         }
 
-        .ai-label { color: var(--v-white); }
-        .ai-label::before { content: ""; width: 8px; height: 8px; background: var(--v-blue); border-radius: 50%; }
-
-        .text-content {
-            font-size: 15px;
-            line-height: 1.6;
-            color: #d1d1d1;
+        .ai {
+            align-self: flex-start;
+            background: var(--surface);
+            border: 1px solid #333;
+            border-bottom-left-radius: 0.2rem;
         }
 
-        /* Markdown Styling */
-        .text-content p { margin-bottom: 12px; }
-        .text-content pre { background: var(--v-accents-1); padding: 16px; border-radius: 8px; border: 1px solid var(--v-accents-2); margin: 12px 0; overflow-x: auto; }
-        .text-content code { font-family: 'SFMono-Regular', Consolas, monospace; color: #f81ce5; font-size: 0.9em; }
-
-        .input-sticky {
-            padding: 24px;
-            background: linear-gradient(transparent, var(--v-black) 40%);
+        .error-msg {
+            background: #450a0a;
+            color: #f87171;
+            border: 1px solid #991b1b;
+            align-self: center;
+            font-size: 0.8rem;
         }
 
-        .input-container {
-            max-width: 700px;
+        .input-area {
+            padding: 1rem;
+            border-top: 1px solid #333;
+            background: var(--bg);
+        }
+
+        .container {
+            max-width: 800px;
             margin: 0 auto;
-            position: relative;
-            background: var(--v-accents-1);
-            border: 1px solid var(--v-accents-2);
-            border-radius: 12px;
-            transition: all 0.2s ease;
-            box-shadow: 0 0 0 1px transparent;
+            display: flex;
+            gap: 0.5rem;
         }
 
-        .input-container:focus-within {
-            border-color: var(--v-white);
-            box-shadow: 0 0 0 1px var(--v-white);
-        }
-
-        textarea {
-            width: 100%;
-            background: transparent;
-            border: none;
-            color: var(--v-white);
-            padding: 16px 50px 16px 16px;
-            font-family: var(--font-sans);
-            font-size: 14px;
+        input {
+            flex: 1;
+            background: var(--surface);
+            border: 1px solid #333;
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 9999px;
             outline: none;
-            resize: none;
-            min-height: 54px;
-            max-height: 200px;
         }
 
-        .send-button {
-            position: absolute;
-            right: 12px;
-            bottom: 10px;
-            background: var(--v-white);
-            color: var(--v-black);
+        input:focus { border-color: var(--primary); }
+
+        button {
+            background: var(--primary);
+            color: white;
             border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
+            padding: 0 1.2rem;
+            border-radius: 9999px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.2s;
+            font-weight: 600;
         }
 
-        .send-button:disabled { opacity: 0.2; cursor: not-allowed; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        .loading-bar {
-            height: 2px;
-            width: 100%;
-            background: var(--v-blue);
-            position: absolute;
-            top: 0; left: 0;
+        .loader {
             display: none;
-            animation: loading 2s infinite linear;
-            transform-origin: 0% 50%;
-        }
-
-        @keyframes loading {
-            0% { transform: scaleX(0); }
-            50% { transform: scaleX(0.5); }
-            100% { transform: scaleX(1); opacity: 0; }
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="triangle"></div>
-        <div class="nav-title">NGUYỄN TIÊU AI</div>
-        <div class="badge">Vercel SDK v3.0</div>
-    </nav>
+<header>
+    <h1>NGUYỄN TIÊU AI</h1>
+</header>
 
-    <div id="chat-window">
-        <div class="msg-container">
-            <div class="role-label ai-label">Nguyễn Tiêu AI</div>
-            <div class="text-content">Hệ thống đã nhận diện mã xác thực Vercel. Tôi đang chạy trên **Vercel AI SDK**. Bạn cần thực hiện tác vụ nào?</div>
-        </div>
+<div id="chat-window">
+    <div class="msg ai">Chào bạn! Tôi đã sẵn sàng. Hãy gửi tin nhắn cho tôi nhé.</div>
+</div>
+
+<div class="input-area">
+    <div id="loader" class="loader">Đang kết nối với trí tuệ nhân tạo...</div>
+    <div class="container">
+        <input type="text" id="userInput" placeholder="Nhập câu hỏi của bạn..." autocomplete="off">
+        <button id="sendBtn">Gửi</button>
     </div>
+</div>
 
-    <div class="input-sticky">
-        <div class="input-container">
-            <div id="loader" class="loading-bar"></div>
-            <textarea id="userInput" rows="1" placeholder="Nhập yêu cầu cho AI..." autofocus></textarea>
-            <button id="btnSend" class="send-button">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-            </button>
-        </div>
-    </div>
+<script>
+    const API_KEY = "AIzaSyC-FMbOepIckeqUa6RXRwGb8uCHlMLeHHo";
+    // Sử dụng v1 thay vì v1beta để ổn định hơn trên môi trường Vercel
+    const API_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent";
 
-    <script>
-        // TOKEN CỦA BẠN (Dùng cho Vercel AI Proxy)
-        const VERCEL_TOKEN = "Vck_6srnGhehxR2ReJQUK3IKUSzDTw6JRijHJJKMwpIDYutjyDFN4L0skNLO";
-        // Đối với Google Gemini qua Vercel AI SDK (sử dụng API ổn định nhất)
-        const GEMINI_KEY = "AIzaSyC-FMbOepIckeqUa6RXRwGb8uCHlMLeHHo";
-        const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
+    const chatWindow = document.getElementById('chat-window');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const loader = document.getElementById('loader');
 
-        const chatWindow = document.getElementById('chat-window');
-        const userInput = document.getElementById('userInput');
-        const btnSend = document.getElementById('btnSend');
-        const loader = document.getElementById('loader');
+    function appendMessage(role, text, isError = false) {
+        const div = document.createElement('div');
+        div.className = `msg ${role} ${isError ? 'error-msg' : ''}`;
+        div.innerText = text;
+        chatWindow.appendChild(div);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
 
-        // Tự động giãn textarea
-        userInput.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
-        });
+    async function callGemini(text) {
+        loader.style.display = 'block';
+        sendBtn.disabled = true;
 
-        async function sendMessage() {
-            const prompt = userInput.value.trim();
-            if (!prompt) return;
+        try {
+            const response = await fetch(`${API_URL}?key=${API_KEY}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: text }] }]
+                })
+            });
 
-            // Reset UI
-            userInput.value = '';
-            userInput.style.height = 'auto';
-            userInput.disabled = true;
-            btnSend.disabled = true;
-            loader.style.display = 'block';
+            const data = await response.json();
 
-            appendMsg('BẠN', prompt);
-
-            try {
-                // Giả lập kiến trúc Vercel AI SDK (Streaming-ready)
-                const response = await fetch(ENDPOINT, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: prompt }] }],
-                        systemInstruction: { 
-                            parts: [{ text: "Bạn là trợ lý AI cao cấp tên Nguyễn Tiêu AI. Trả lời bằng tiếng Việt, phong cách chuyên gia, hỗ trợ kỹ thuật và lập trình chuyên nghiệp." }] 
-                        }
-                    })
-                });
-
-                const data = await response.json();
-                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Không có phản hồi từ hệ thống Vercel.";
-                
-                appendMsg('Nguyễn Tiêu AI', reply, true);
-            } catch (error) {
-                appendMsg('HỆ THỐNG', "Lỗi kết nối với Vercel AI SDK. Vui lòng kiểm tra Token.");
-            } finally {
-                userInput.disabled = false;
-                btnSend.disabled = false;
-                loader.style.display = 'none';
-                userInput.focus();
+            if (!response.ok) {
+                throw new Error(data.error?.message || "Lỗi API không xác định");
             }
-        }
 
-        function appendMsg(role, text, isAi = false) {
-            const container = document.createElement('div');
-            container.className = 'msg-container';
-            
-            const label = document.createElement('div');
-            label.className = `role-label ${isAi ? 'ai-label' : ''}`;
-            label.innerText = role;
-
-            const content = document.createElement('div');
-            content.className = 'text-content';
-            content.innerHTML = isAi ? marked.parse(text) : text;
-
-            container.appendChild(label);
-            container.appendChild(content);
-            chatWindow.appendChild(container);
-            
-            chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
-        }
-
-        btnSend.onclick = sendMessage;
-        userInput.onkeydown = (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
+            if (data.candidates && data.candidates[0].content.parts[0].text) {
+                return data.candidates[0].content.parts[0].text;
+            } else {
+                throw new Error("API không trả về văn bản hợp lệ");
             }
-        };
-    </script>
+
+        } catch (err) {
+            console.error(err);
+            return { error: true, message: err.message };
+        } finally {
+            loader.style.display = 'none';
+            sendBtn.disabled = false;
+        }
+    }
+
+    async function handleChat() {
+        const text = userInput.value.trim();
+        if (!text) return;
+
+        appendMessage('user', text);
+        userInput.value = '';
+
+        const result = await callGemini(text);
+
+        if (typeof result === 'object' && result.error) {
+            appendMessage('ai', "Lỗi: " + result.message, true);
+        } else {
+            appendMessage('ai', result);
+        }
+    }
+
+    sendBtn.addEventListener('click', handleChat);
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleChat();
+    });
+</script>
+
 </body>
 </html>
 
