@@ -3,361 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PANEL NGUYỄN TIÊU DEV</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    <title>MODERN_GLASS_LOGIN</title>
     <style>
-        /* CSS RESET & VARIABLES */
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500;700&display=swap');
+
         :root {
-            --primary: #00f2fe;
-            --secondary: #4facfe;
-            --accent: #f093fb;
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.15);
-            --text: #ffffff;
+            --accent: #00ffcc; /* Màu Cyan Neon */
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; } /* Cursor ẩn để dùng cursor custom */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Quicksand', sans-serif; }
 
         body {
             height: 100vh;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: #050505;
+            display: flex; justify-content: center; align-items: center;
             overflow: hidden;
-            font-family: 'Montserrat', sans-serif;
-            perspective: 2000px;
+            position: relative;
         }
 
-        /* CUSTOM CURSOR */
-        #cursor {
-            width: 20px; height: 20px;
-            border: 2px solid var(--primary);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.1s;
-        }
-
-        /* BACKGROUND ENGINE */
-        #canvas-bg { position: absolute; top: 0; left: 0; z-index: 1; filter: blur(1px); }
-
-        .aurora-bg {
-            position: absolute;
-            width: 150%; height: 150%;
-            background: radial-gradient(circle at 20% 30%, #1a2a6c, transparent 40%),
-                        radial-gradient(circle at 80% 70%, #b21f1f, transparent 40%),
-                        radial-gradient(circle at 50% 50%, #fdbb2d, transparent 40%);
-            filter: blur(100px);
+        /* NỀN AURORA ĐỔI MÀU LIÊN TỤC */
+        .aurora-container {
+            position: absolute; width: 100%; height: 100%;
             z-index: 0;
-            animation: move-aurora 20s ease infinite alternate;
+            background: linear-gradient(135deg, #090909, #0f172a, #1e1b4b, #2e1065, #0f172a);
+            background-size: 400% 400%;
+            animation: auroraAnim 15s ease infinite;
         }
 
-        @keyframes move-aurora {
-            from { transform: translate(-10%, -10%) rotate(0deg); }
-            to { transform: translate(10%, 10%) rotate(10deg); }
+        @keyframes auroraAnim {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        /* MAIN GLASS CARD */
-        .master-wrapper {
+        /* LỚP MÂY MÀU LOANG (MESH) */
+        .blob {
+            position: absolute; width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(0, 255, 204, 0.1) 0%, transparent 70%);
+            filter: blur(80px);
+            animation: drift 20s infinite alternate;
+        }
+
+        @keyframes drift {
+            from { transform: translate(-20%, -20%); }
+            to { transform: translate(20%, 20%); }
+        }
+
+        /* HỘP LOGIN - PHẲNG & SANG TRỌNG */
+        .login-card {
             position: relative;
-            z-index: 100;
-            transform-style: preserve-3d;
-            will-change: transform;
-        }
-
-        .outer-glow {
-            padding: 2px;
+            z-index: 10;
+            width: 420px;
+            padding: 50px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
             border-radius: 50px;
-            background: linear-gradient(135deg, var(--primary), transparent, var(--accent));
-            animation: border-flow 5s linear infinite;
-        }
-
-        @keyframes border-flow {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
-        }
-
-        .main-card {
-            width: 480px;
-            padding: 60px;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(50px) saturate(180%);
-            -webkit-backdrop-filter: blur(50px) saturate(180%);
-            border-radius: 48px;
             border: 1px solid var(--border);
-            position: relative;
-            transform-style: preserve-3d;
-            box-shadow: 0 50px 100px rgba(0,0,0,0.8);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+            text-align: center;
         }
 
-        /* CONTENT STYLING */
-        .brand-section { transform: translateZ(80px); margin-bottom: 40px; }
-
-        .brand-logo {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 32px;
-            font-weight: 700;
-            background: linear-gradient(to right, #fff, var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 8px;
-            text-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
+        /* VIỀN SÁNG CHẠY QUANH (REFLACTION) */
+        .login-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50px;
+            padding: 2px;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            pointer-events: none;
         }
 
-        .dev-tag {
-            font-size: 10px;
-            color: var(--primary);
-            letter-spacing: 4px;
-            margin-top: 10px;
-            opacity: 0.8;
+        .header-sys {
+            display: flex; justify-content: space-between;
+            font-size: 10px; color: rgba(255,255,255,0.4);
+            margin-bottom: 40px; letter-spacing: 2px;
             text-transform: uppercase;
         }
 
-        /* INPUT SYSTEM */
-        .form-group {
-            margin-bottom: 25px;
-            transform: translateZ(50px);
-            position: relative;
+        h1 {
+            color: #fff; font-weight: 700; font-size: 28px;
+            letter-spacing: 5px; margin-bottom: 5px;
+            text-transform: uppercase;
         }
 
-        .form-group label {
-            display: block;
-            font-size: 9px;
-            color: rgba(255,255,255,0.4);
-            margin-bottom: 10px;
-            text-align: left;
-            padding-left: 20px;
-            letter-spacing: 2px;
+        .status-dot {
+            width: 50px; height: 3px; background: var(--accent);
+            margin: 15px auto 35px; border-radius: 5px;
+            box-shadow: 0 0 15px var(--accent);
         }
 
-        .input-wrapper {
-            position: relative;
-            overflow: hidden;
-            border-radius: 24px;
-        }
+        /* INPUTS */
+        .input-group { margin-bottom: 20px; }
 
         input {
-            width: 100%;
-            padding: 18px 25px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 24px;
-            color: #fff;
-            outline: none;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            font-size: 15px;
+            width: 100%; padding: 18px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            color: #fff; font-size: 15px; outline: none;
+            transition: 0.3s; text-align: center;
         }
 
         input:focus {
-            background: rgba(255,255,255,0.08);
-            border-color: var(--primary);
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
-            padding-left: 35px;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.15);
         }
 
-        /* BUTTON SYSTEM */
-        .btn-container { transform: translateZ(100px); margin-top: 40px; }
-
-        .btn-glow {
-            width: 100%;
-            padding: 20px;
-            background: #fff;
-            color: #000;
-            border: none;
-            border-radius: 24px;
-            font-weight: 700;
-            font-size: 16px;
-            letter-spacing: 2px;
-            cursor: none;
-            transition: 0.5s;
-            position: relative;
-            overflow: hidden;
+        /* BUTTON LOGIN */
+        .btn-submit {
+            width: 100%; padding: 18px; margin-top: 15px;
+            background: #fff; color: #000;
+            border: none; border-radius: 25px;
+            font-weight: 700; font-size: 15px; letter-spacing: 2px;
+            cursor: pointer; transition: 0.4s;
+            text-transform: uppercase;
         }
 
-        .btn-glow:hover {
-            background: var(--primary);
-            color: #fff;
-            box-shadow: 0 15px 40px rgba(0, 242, 254, 0.4);
-            transform: translateY(-5px);
+        .btn-submit:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 255, 204, 0.3);
         }
 
-        /* FOOTER & SYSTEM INFO */
-        .sys-info {
-            position: absolute;
-            bottom: -80px;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            color: rgba(255,255,255,0.3);
-            font-size: 9px;
-            padding: 0 20px;
-            transform: translateZ(20px);
+        /* SOCIAL LINKS */
+        .footer-social {
+            margin-top: 40px; display: flex; justify-content: center; gap: 20px;
         }
-
-        .social-dock {
-            margin-top: 50px;
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            transform: translateZ(40px);
+        .footer-social a {
+            color: rgba(255,255,255,0.3); font-size: 11px;
+            text-decoration: none; transition: 0.3s;
+            font-weight: 500;
         }
+        .footer-social a:hover { color: #fff; }
 
-        .social-dock a {
-            color: rgba(255,255,255,0.5);
-            text-decoration: none;
-            font-size: 10px;
-            transition: 0.3s;
-            position: relative;
-        }
-
-        .social-dock a:hover { color: var(--primary); transform: scale(1.2); }
-
-        .binary-clock {
-            position: absolute;
-            top: 40px; right: 40px;
-            font-family: monospace;
-            font-size: 10px;
-            color: var(--primary);
-            opacity: 0.4;
-        }
+        #clock { color: var(--accent); font-weight: 500; }
 
     </style>
 </head>
 <body>
 
-    <div id="cursor"></div>
-    <div class="aurora-bg"></div>
-    <canvas id="canvas-bg"></canvas>
+    <div class="aurora-container"></div>
+    <div class="blob" style="top: 10%; left: 15%;"></div>
+    <div class="blob" style="bottom: 10%; right: 15%; background: radial-gradient(circle, rgba(147, 147, 255, 0.1) 0%, transparent 70%);"></div>
 
-    <div class="master-wrapper" id="master">
-        <div class="outer-glow">
-            <div class="main-card">
-                <div class="binary-clock" id="bin-time"></div>
-                
-                <div class="brand-section">
-                    <h2 class="brand-logo">CORE_V7</h2>
-                    <p class="dev-tag">NGUYỄN TIÊU DEV EDITION</p>
-                </div>
+    <div class="login-card">
+        <div class="header-sys">
+            <span id="bat">BATTERY: --%</span>
+            <span id="clock">00:00:00</span>
+        </div>
 
-                <div class="form-group">
-                    <label>> IDENTIFICATION_KEY</label>
-                    <input type="text" placeholder="Hệ thống đã sẵn sàng..." id="user">
-                </div>
+        <h1>SECURITY</h1>
+        <div class="status-dot"></div>
 
-                <div class="form-group">
-                    <label>> SECURITY_PHRASE</label>
-                    <input type="password" placeholder="••••••••••••" id="pass">
-                </div>
+        <div class="input-group">
+            <input type="text" placeholder="ACCESS IDENTITY" autocomplete="off">
+        </div>
+        <div class="input-group">
+            <input type="password" placeholder="SECURE PASSWORD">
+        </div>
 
-                <div class="btn-container">
-                    <button class="btn-glow" onclick="validate()">INITIALIZE LOGIN</button>
-                </div>
+        <button class="btn-submit">INITIALIZE LOGIN</button>
 
-                <div class="social-dock">
-                    <a href="https://www.facebook.com/share/1CTXMD4ctG/">FB.CONNECT</a>
-                    <a href="https://tiktok.com/@nguyentieulive">TT.STREAM</a>
-                    <a href="https://zalo.me/0353564018">ZAL.SECURE</a>
-                </div>
-
-                <div class="sys-info">
-                    <span id="bat">BATTERY: STATUS_UNKNOWN</span>
-                    <span id="os">SYSTEM: WINDOWS_NT_10.2</span>
-                    <span id="ping">LATENCY: 14MS</span>
-                </div>
-            </div>
+        <div class="footer-social">
+            <a href="https://www.facebook.com/share/1CTXMD4ctG/" target="_blank">FACEBOOK</a>
+            <a href="https://tiktok.com/@nguyentieulive" target="_blank">TIKTOK</a>
+            <a href="https://zalo.me/0353564018" target="_blank">ZALO</a>
         </div>
     </div>
 
     <script>
-        // 1. ENGINE HẠT PHỨC TẠP
-        const canvas = document.getElementById('canvas-bg');
-        const ctx = canvas.getContext('2d');
-        let w, h;
-        const setSize = () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; };
-        setSize(); window.onresize = setSize;
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * w;
-                this.y = Math.random() * h;
-                this.size = Math.random() * 2 + 0.5;
-                this.vx = (Math.random() - 0.5) * 1.5;
-                this.vy = (Math.random() - 0.5) * 1.5;
-            }
-            update() {
-                this.x += this.vx; this.y += this.vy;
-                if(this.x < 0 || this.x > w) this.vx *= -1;
-                if(this.y < 0 || this.y > h) this.vy *= -1;
-            }
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
-                ctx.fillStyle = "rgba(0, 242, 254, 0.5)";
-                ctx.fill();
-            }
-        }
-
-        const particles = Array.from({length: 120}, () => new Particle());
-
-        function animate() {
-            ctx.clearRect(0,0,w,h);
-            particles.forEach((p, i) => {
-                p.update(); p.draw();
-                for(let j=i; j<particles.length; j++) {
-                    const dx = p.x - particles[j].x;
-                    const dy = p.y - particles[j].y;
-                    const dist = Math.sqrt(dx*dx + dy*dy);
-                    if(dist < 100) {
-                        ctx.beginPath();
-                        ctx.strokeStyle = `rgba(0, 242, 254, ${1 - dist/100})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
-            });
-            requestAnimationFrame(animate);
-        }
-        animate();
-
-        // 2. 3D PARALLAX INTERACTION
-        const master = document.getElementById('master');
-        document.addEventListener('mousemove', (e) => {
-            const x = (w / 2 - e.clientX) / 25;
-            const y = (h / 2 - e.clientY) / 25;
-            master.style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
-            
-            // Custom cursor move
-            const cur = document.getElementById('cursor');
-            cur.style.left = e.clientX + 'px';
-            cur.style.top = e.clientY + 'px';
-        });
-
-        // 3. SYSTEM SYNC (CLOCK, BATTERY, PING)
-        function sync() {
+        // Cập nhật Pin và Giờ
+        function updateUI() {
             const now = new Date();
-            document.getElementById('bin-time').innerText = now.getHours().toString(2) + ":" + now.getMinutes().toString(2);
+            document.getElementById('clock').innerText = now.toLocaleTimeString('vi-VN');
             
             if(navigator.getBattery) {
                 navigator.getBattery().then(b => {
-                    document.getElementById('bat').innerText = `BATTERY: ${Math.round(b.level * 100)}% [${b.charging ? 'CHARGING' : 'DISCHARGING'}]`;
+                    document.getElementById('bat').innerText = `POWER: ${Math.round(b.level * 100)}%`;
                 });
             }
-            
-            document.getElementById('ping').innerText = `LATENCY: ${Math.floor(Math.random()*10 + 10)}MS`;
-            document.getElementById('os').innerText = `SYSTEM: ${navigator.platform.toUpperCase()}`;
         }
-        setInterval(sync, 1000); sync();
+        setInterval(updateUI, 1000);
+        updateUI();
 
-        function validate() {
-            const btn = document.querySelector('.btn-glow');
-            btn.innerText = "BYPASSING...";
+        // Xử lý hiệu ứng click nút
+        document.querySelector('.btn-submit').onclick = function() {
+            this.innerText = "AUTHENTICATING...";
             setTimeout(() => {
-                alert("ACCESS GRANTED. Welcome back, Master Nguyễn Tiêu.");
-                btn.innerText = "INITIALIZE LOGIN";
+                alert("Chào mừng sếp Nguyễn Tiêu quay trở lại!");
+                this.innerText = "INITIALIZE LOGIN";
             }, 1500);
         }
     </script>
