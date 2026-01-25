@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PANEL NGUYỄN TIÊU DEV - FREE INPUT</title>
+    <title>PANEL NGUYỄN TIÊU DEV</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&display=swap');
 
@@ -45,6 +45,7 @@
             border-radius: 50px;
             overflow: hidden;
             z-index: 10;
+            transition: transform 0.1s; /* Dành cho hiệu ứng rung */
         }
         .neon-frame::before {
             content: '';
@@ -55,6 +56,14 @@
             animation: rotate 3s linear infinite;
         }
         @keyframes rotate { to { transform: rotate(360deg); } }
+
+        /* --- HIỆU ỨNG RUNG KHI SAI --- */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        .shake { animation: shake 0.2s ease-in-out 0s 2; border: 2px solid #ff4b2b !important; }
 
         /* --- GLASS CARD --- */
         .glass-card {
@@ -68,30 +77,28 @@
             z-index: 5;
         }
 
-        /* ADMIN HEADER */
         .capsule-header {
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 12px 25px; border-radius: 20px; margin-bottom: 35px;
         }
-        #bat-val { font-size: 11px; color: #ffd700; font-weight: 900; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
-        #time-val { font-size: 11px; color: #00ffaa; font-weight: 900; text-shadow: 0 0 10px rgba(0, 255, 170, 0.5); }
+        #bat-val { font-size: 11px; color: #ffd700; font-weight: 900; }
+        #time-val { font-size: 11px; color: #00ffaa; font-weight: 900; }
 
         h1 { color: #fff; font-size: 32px; font-weight: 900; letter-spacing: 6px; margin-bottom: 30px; }
 
-        /* INPUT - SẾP CÓ THỂ NHẬP TỰ DO */
+        /* THÔNG BÁO LỖI */
+        #error-msg {
+            color: #ff4b2b; font-size: 10px; font-weight: 900;
+            margin-bottom: 15px; display: none; text-transform: uppercase;
+        }
+
         input {
             width: 100%; padding: 18px; margin-bottom: 15px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 25px; color: #fff; text-align: center; outline: none;
-            transition: 0.3s;
-        }
-        input:focus {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #00f2fe;
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
         }
 
         .btn-init {
@@ -101,7 +108,6 @@
         }
         .btn-init:hover { background: #00f2fe; box-shadow: 0 0 30px #00f2fe; }
 
-        /* SOCIAL DOCK */
         .social-dock { margin-top: 40px; display: flex; justify-content: center; gap: 10px; }
         .social-item {
             background: rgba(255, 255, 255, 0.05);
@@ -118,19 +124,21 @@
     <div class="aurora-bg"><div class="blob b1"></div><div class="blob b2"></div></div>
     <canvas id="plexus-canvas"></canvas>
 
-    <div class="neon-frame">
+    <div class="neon-frame" id="main-frame">
         <div class="glass-card">
             <div class="capsule-header">
                 <span id="bat-val">BATTERY: --%</span>
                 <span id="time-val">00:00:00</span>
             </div>
 
-            <h1>LOGIN</h1>
+            <h1>PANEL LOGIN</h1>
 
-            <input type="text" placeholder="NHẬP TÀI KHOẢN">
-            <input type="password" placeholder="NHẬP MẬT KHẨU">
+            <div id="error-msg">SAI TÀI KHOẢN HOẶC MẬT KHẨU!</div>
 
-            <button class="btn-init" onclick="handleLogin()">ĐĂNG NHẬP</button>
+            <input type="text" id="user" placeholder="TÀI KHOẢN">
+            <input type="password" id="pass" placeholder="MẬT KHẨU">
+
+            <button class="btn-init" onclick="validate()">ĐĂNG NHẬP</button>
 
             <div class="social-dock">
                 <a href="https://www.facebook.com/share/1CTXMD4ctG/" class="social-item" target="_blank">FACEBOOK</a>
@@ -141,68 +149,56 @@
     </div>
 
     <script>
+        // Hệ thống Plexus giữ nguyên
         const canvas = document.getElementById('plexus-canvas');
         const ctx = canvas.getContext('2d');
         let w, h, particles = [];
-
         function init() {
-            w = canvas.width = window.innerWidth;
-            h = canvas.height = window.innerHeight;
+            w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight;
             particles = [];
             for (let i = 0; i < 150; i++) {
-                particles.push({
-                    x: Math.random() * w,
-                    y: Math.random() * h,
-                    vx: (Math.random() - 0.5) * 1.2,
-                    vy: (Math.random() - 0.5) * 1.2,
-                    size: Math.random() * 2 + 0.5
-                });
+                particles.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - 0.5) * 1.2, vy: (Math.random() - 0.5) * 1.2, size: Math.random() * 2 + 0.5 });
             }
         }
-
         function draw() {
             ctx.clearRect(0, 0, w, h);
-            for (let i = 0; i < particles.length; i++) {
-                let p = particles[i];
+            particles.forEach((p, i) => {
                 p.x += p.vx; p.y += p.vy;
-                if (p.x < 0 || p.x > w) p.vx *= -1;
-                if (p.y < 0 || p.y > h) p.vy *= -1;
+                if (p.x < 0 || p.x > w) p.vx *= -1; if (p.y < 0 || p.y > h) p.vy *= -1;
                 ctx.fillStyle = "rgba(0, 242, 254, 0.4)";
                 ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
                 for (let j = i + 1; j < particles.length; j++) {
-                    let p2 = particles[j];
-                    let dx = p.x - p2.x; let dy = p.y - p2.y;
-                    let dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 100) {
-                        ctx.strokeStyle = `rgba(0, 242, 254, ${1 - dist / 100})`;
-                        ctx.lineWidth = 0.4; ctx.beginPath();
-                        ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
-                    }
+                    let p2 = particles[j]; let dx = p.x - p2.x, dy = p.y - p2.y, dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 100) { ctx.strokeStyle = `rgba(0, 242, 254, ${1 - dist / 100})`; ctx.lineWidth = 0.4; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke(); }
                 }
-            }
+            });
             requestAnimationFrame(draw);
         }
+        window.addEventListener('resize', init); init(); draw();
 
-        window.addEventListener('resize', init);
-        init(); draw();
-
+        // Xử lý Pin và Giờ
         function tick() {
-            const d = new Date();
-            document.getElementById('time-val').innerText = d.toLocaleTimeString('vi-VN');
-            if(navigator.getBattery) {
-                navigator.getBattery().then(b => {
-                    document.getElementById('bat-val').innerText = "BAT: " + Math.round(b.level * 100) + "%";
-                });
-            }
+            const d = new Date(); document.getElementById('time-val').innerText = d.toLocaleTimeString('vi-VN');
+            if(navigator.getBattery) navigator.getBattery().then(b => document.getElementById('bat-val').innerText = "BAT: " + Math.round(b.level * 100) + "%");
         }
         setInterval(tick, 1000); tick();
 
-        function handleLogin() {
-            const user = document.querySelector('input[type="text"]').value;
-            if(user.trim() === "") {
-                alert("Sếp chưa nhập tên kìa!");
+        // LOGIC KIỂM TRA ĐĂNG NHẬP
+        function validate() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            const frame = document.getElementById('main-frame');
+            const msg = document.getElementById('error-msg');
+
+            // Giả định: User là 'admin' và Pass là '123'
+            if(u === 'admin' && p === '123') {
+                msg.style.display = 'none';
+                alert("Chào bạn! Đăng nhập thành công.");
             } else {
-                alert("Xác nhận danh tính: " + user + ". Đang vào hệ thống!");
+                // Hiện lỗi và rung khung
+                msg.style.display = 'block';
+                frame.classList.add('shake');
+                setTimeout(() => { frame.classList.remove('shake'); }, 400);
             }
         }
     </script>
