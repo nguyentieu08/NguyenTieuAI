@@ -3,422 +3,355 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NGUYỄN TIÊU - CHAT AI</title>
-    <!-- Firebase SDK -->
+    <title>Nguyễn Tiêu - CHAT AI</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&display=swap');
 
         :root {
-            --primary: #00f2fe;
-            --secondary: #7028e4;
-            --bg: #020205;
-            --font-mono: 'JetBrains Mono', monospace;
-            --font-ui: 'Orbitron', sans-serif;
+            --bg-body: #131314;
+            --text-main: #e3e3e3;
+            --text-sub: #c4c7c5;
+            --input-bg: #1e1e20;
+            --input-border: #3c4043;
+            --ai-accent: #8ab4f8;
+            --user-accent: #c4c7c5;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
 
         body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Google Sans', Roboto, Arial, sans-serif;
             height: 100vh;
-            background-color: var(--bg);
-            color: #fff;
-            font-family: var(--font-mono);
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
+        }
+
+        nav {
+            padding: 16px 24px;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        canvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
-
-        header {
-            position: relative;
-            z-index: 100;
-            padding: 10px 20px;
-            background: rgba(5, 5, 10, 0.95);
-            backdrop-filter: blur(15px);
-            border-bottom: 3px solid var(--primary);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 90px;
+        .nav-brand {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--ai-accent);
         }
 
-        .logo {
-            font-family: var(--font-ui);
-            font-weight: 900;
-            color: var(--primary);
-            text-shadow: 0 0 15px var(--primary);
-            font-size: 1rem;
-            max-width: 55%;
-        }
-
-        .status-bar {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 2px;
-            font-family: var(--font-ui);
-            font-weight: 900;
-        }
-
-        .status-item {
-            font-size: 24px;
-            color: var(--primary);
-            text-shadow: 0 0 12px rgba(0, 242, 254, 0.6);
-            line-height: 1;
-        }
-
-        #chat-container {
+        main {
             flex: 1;
             overflow-y: auto;
-            padding: 20px 15px;
-            position: relative;
-            z-index: 10;
+            padding: 20px 16px;
             display: flex;
             flex-direction: column;
-            gap: 25px;
-            scrollbar-width: none;
         }
 
-        #chat-container::-webkit-scrollbar { display: none; }
+        .chat-container {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
 
         .message {
-            max-width: 90%;
             display: flex;
             flex-direction: column;
-            animation: fadeIn 0.4s ease-out;
+            max-width: 85%;
+            animation: fadeIn 0.3s ease-out;
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .user-msg { align-self: flex-end; align-items: flex-end; }
-        .ai-msg { align-self: flex-start; align-items: flex-start; }
-
-        .msg-info {
-            font-size: 11px;
-            font-family: var(--font-ui);
-            font-weight: 900;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .ai-msg .msg-info { color: var(--primary); }
-        .ai-msg .msg-info::before {
-            content: "";
-            width: 8px; height: 8px;
-            background: var(--primary);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--primary);
+        /* Bố cục bên trái cho AI */
+        .ai-message {
+            align-self: flex-start;
+            align-items: flex-start;
         }
 
-        .user-msg .msg-info { color: #aaa; }
+        /* Bố cục bên phải cho Người dùng */
+        .user-message {
+            align-self: flex-end;
+            align-items: flex-end;
+        }
+
+        .sender-name {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .ai-message .sender-name { color: var(--ai-accent); }
+        .user-message .sender-name { color: var(--user-accent); }
 
         .bubble {
-            padding: 12px 16px;
-            border-radius: 20px;
             line-height: 1.6;
             font-size: 16px;
             word-wrap: break-word;
         }
 
-        .user-msg .bubble {
-            background: rgba(255, 255, 255, 0.1);
+        .user-message .bubble {
+            background: #2b2d31;
+            padding: 12px 18px;
+            border-radius: 20px 20px 4px 20px;
             color: #fff;
-            border-bottom-right-radius: 4px;
         }
 
-        .ai-msg .bubble {
-            background: transparent;
-            color: #e0faff;
-            padding-left: 0;
+        .ai-message .bubble {
+            padding: 4px 0;
+            color: var(--text-main);
         }
 
-        .ai-msg .bubble p { margin-bottom: 10px; }
-
-        .input-area {
-            position: relative;
-            z-index: 100;
-            padding: 10px 15px 140px 15px;
-            background: linear-gradient(transparent, var(--bg) 70%);
-        }
-
-        .input-box {
+        /* Shimmer Loading */
+        .shimmer {
             display: flex;
-            background: rgba(25, 25, 45, 0.98);
-            border: 2px solid var(--primary);
-            border-radius: 40px;
-            padding: 8px;
+            flex-direction: column;
+            gap: 8px;
+            width: 200px;
+            padding: 10px 0;
+        }
+
+        .shimmer-line {
+            height: 12px;
+            border-radius: 2px;
+            background: linear-gradient(90deg, #1e1e20 25%, #2d2d30 50%, #1e1e20 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        footer {
+            padding: 16px;
+            background: var(--bg-body);
+        }
+
+        .input-wrapper {
             max-width: 800px;
+            width: 100%;
             margin: 0 auto;
-            box-shadow: 0 -5px 25px rgba(0,0,0,0.5);
+            background: var(--input-bg);
+            border-radius: 28px;
+            padding: 4px 8px 4px 20px;
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--input-border);
         }
 
         input {
             flex: 1;
             background: transparent;
             border: none;
-            padding: 12px 18px;
-            color: #fff;
             outline: none;
-            font-size: 18px;
-            font-family: var(--font-mono);
+            color: var(--text-main);
+            font-size: 16px;
+            padding: 12px 0;
         }
 
         .send-btn {
-            background: var(--primary);
-            color: #000;
-            border: none;
-            width: 52px;
-            height: 52px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            font-weight: 900;
-            font-size: 26px;
+            border: none;
+            background: transparent;
+            color: var(--text-sub);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .typing {
-            font-size: 11px;
-            color: var(--primary);
+        .send-btn.active { color: var(--ai-accent); }
+
+        .disclaimer {
             text-align: center;
-            margin-bottom: 12px;
-            display: none;
-            font-family: var(--font-ui);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 0 8px var(--primary);
+            font-size: 11px;
+            color: #8e918f;
+            margin-top: 12px;
         }
+
+        /* Markdown blocks */
+        .bubble p { margin-bottom: 12px; }
+        .bubble pre { background: #000; padding: 14px; border-radius: 8px; margin: 10px 0; overflow-x: auto; }
+        .bubble code { font-family: monospace; color: #8ab4f8; }
     </style>
 </head>
-<body onclick="App.initAudio()">
+<body>
 
-    <canvas id="bg-canvas"></canvas>
+    <nav>
+        <div class="nav-brand">Nguyễn Tiêu AI</div>
+    </nav>
 
-    <header>
-        <div class="logo">NGUYỄN TIÊU - CHAT AI</div>
-        <div class="status-bar">
-            <div class="status-item">PIN: <span id="bat">--</span>%</div>
-            <div class="status-item" id="time">00:00</div>
+    <main id="scroller">
+        <div class="chat-container" id="chat-box">
+            <!-- Tin nhắn mẫu -->
+            <div class="message ai-message">
+                <span class="sender-name">Nguyễn Tiêu AI</span>
+                <div class="bubble">Chào bạn! Tôi có thể giúp gì cho bạn hôm nay?</div>
+            </div>
         </div>
-    </header>
+    </main>
 
-    <div id="chat-container"></div>
-
-    <div class="input-area">
-        <div id="typing-status" class="typing">NGUYỄN TIÊU AI ĐANG XỬ LÝ...</div>
-        <div class="input-box">
+    <footer>
+        <div class="input-wrapper">
             <input type="text" id="user-input" placeholder="Hỏi Nguyễn Tiêu AI..." autocomplete="off">
-            <button class="send-btn" onclick="App.handleSend()">></button>
+            <button class="send-btn" id="send-trigger" onclick="App.sendMessage()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+            </button>
         </div>
-    </div>
+        <p class="disclaimer">Tin nhắn được bảo mật riêng tư giữa bạn và AI.</p>
+    </footer>
 
     <script>
         const firebaseConfig = JSON.parse(__firebase_config);
-        const GEMINI_KEY = "AIzaSyABU1m6_7jtp-nUVWmNn7Hoe3urXrwCvME"; 
+        const apiKey = ""; // Sẽ được hệ thống điền tự động
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'nguyen-tieu-pro';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'nguyen-tieu-minimal';
 
         window.App = {
-            user: null,
-            audioCtx: null,
+            uid: null,
+            history: [],
 
             async init() {
-                this.setupVisuals();
-                this.initClock();
-                this.initBattery();
-                
-                auth.onAuthStateChanged(async (u) => {
-                    this.user = u;
-                    if (!u) {
-                        try {
-                            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                                await auth.signInWithCustomToken(__initial_auth_token);
-                            } else {
-                                await auth.signInAnonymously();
-                            }
-                        } catch(e) { console.error("Auth Error:", e); }
+                auth.onAuthStateChanged(async (user) => {
+                    if (user) {
+                        this.uid = user.uid;
+                        this.loadHistory();
                     } else {
-                        this.bindChatListener();
+                        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                            await auth.signInWithCustomToken(__initial_auth_token);
+                        } else {
+                            await auth.signInAnonymously();
+                        }
                     }
                 });
 
-                document.getElementById('user-input').onkeydown = (e) => {
-                    if(e.key === 'Enter') this.handleSend();
-                };
+                const input = document.getElementById('user-input');
+                const btn = document.getElementById('send-trigger');
+                input.oninput = () => btn.classList.toggle('active', input.value.trim() !== "");
+                input.onkeydown = (e) => { if (e.key === 'Enter') this.sendMessage(); };
             },
 
-            playBeep(type) {
-                if (!this.audioCtx) return;
-                const osc = this.audioCtx.createOscillator();
-                const gain = this.audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(this.audioCtx.destination);
-
-                if (type === 'user') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(800, this.audioCtx.currentTime);
-                    gain.gain.setValueAtTime(0.1, this.audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, this.audioCtx.currentTime + 0.1);
-                    osc.start(); osc.stop(this.audioCtx.currentTime + 0.1);
-                } else {
-                    osc.type = 'square';
-                    osc.frequency.setValueAtTime(1200, this.audioCtx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(1600, this.audioCtx.currentTime + 0.05);
-                    gain.gain.setValueAtTime(0.05, this.audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, this.audioCtx.currentTime + 0.1);
-                    osc.start(); osc.stop(this.audioCtx.currentTime + 0.1);
+            async loadHistory() {
+                const path = `/artifacts/${appId}/users/${this.uid}/messages`;
+                const snap = await db.collection(path).orderBy('timestamp', 'asc').limit(30).get();
+                if (!snap.empty) {
+                    const box = document.getElementById('chat-box');
+                    box.innerHTML = '';
+                    snap.forEach(doc => {
+                        const d = doc.data();
+                        this.renderUI(d.role, d.text);
+                        this.history.push({ role: d.role === 'ai' ? 'model' : 'user', parts: [{ text: d.text }] });
+                    });
+                    this.scroll();
                 }
             },
 
-            initClock() {
-                const clock = () => {
-                    const d = new Date();
-                    document.getElementById('time').innerText = 
-                        d.getHours().toString().padStart(2, '0') + ":" + 
-                        d.getMinutes().toString().padStart(2, '0');
-                };
-                clock(); setInterval(clock, 1000);
-            },
-
-            async initBattery() {
-                const bEl = document.getElementById('bat');
-                try {
-                    if (navigator.getBattery) {
-                        const battery = await navigator.getBattery();
-                        const update = () => bEl.innerText = Math.round(battery.level * 100);
-                        update();
-                        battery.onlevelchange = update;
-                    } else { bEl.innerText = "100"; }
-                } catch(e) { bEl.innerText = "99"; }
-            },
-
-            bindChatListener() {
-                const messagesRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('messages');
-                let initialLoad = true;
-
-                messagesRef.orderBy('timestamp', 'asc').limit(60).onSnapshot(snap => {
-                    const container = document.getElementById('chat-container');
-                    container.innerHTML = '';
-                    snap.forEach(doc => {
-                        const data = doc.data();
-                        this.renderMessage(data.role, data.text);
-                    });
-                    
-                    if (!initialLoad && !snap.metadata.hasPendingWrites) {
-                        const lastMsg = snap.docs[snap.docs.length - 1]?.data();
-                        if (lastMsg) this.playBeep(lastMsg.role);
-                    }
-                    
-                    initialLoad = false;
-                    container.scrollTop = container.scrollHeight;
-                });
-            },
-
-            renderMessage(role, text) {
-                const container = document.getElementById('chat-container');
+            renderUI(role, text, isStreaming = false) {
+                const box = document.getElementById('chat-box');
                 const div = document.createElement('div');
-                div.className = `message ${role}-msg`;
-                const label = role === 'ai' ? 'NGUYỄN TIÊU AI' : 'BẠN';
-                const content = role === 'ai' ? marked.parse(text) : text;
+                div.className = `message ${role}-message`;
                 
+                const name = role === 'ai' ? 'Nguyễn Tiêu AI' : 'Bạn';
                 div.innerHTML = `
-                    <span class="msg-info">${label}</span>
-                    <div class="bubble">${content}</div>
+                    <span class="sender-name">${name}</span>
+                    <div class="bubble">${isStreaming && role === 'ai' ? '' : marked.parse(text)}</div>
                 `;
                 
-                container.appendChild(div);
-                container.scrollTop = container.scrollHeight;
+                box.appendChild(div);
+                this.scroll();
+                if (isStreaming && role === 'ai') return div.querySelector('.bubble');
             },
 
-            async handleSend() {
+            scroll() {
+                const s = document.getElementById('scroller');
+                s.scrollTop = s.scrollHeight;
+            },
+
+            async sendMessage() {
                 const input = document.getElementById('user-input');
                 const text = input.value.trim();
-                if (!text || !this.user) return;
+                if (!text || !this.uid) return;
 
                 input.value = '';
-                const typing = document.getElementById('typing-status');
-                const messagesRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('messages');
+                document.getElementById('send-trigger').classList.remove('active');
+
+                // Render User message (Bên phải)
+                this.renderUI('user', text);
+                
+                // Hiển thị Shimmer loading (Bên trái)
+                const box = document.getElementById('chat-box');
+                const loader = document.createElement('div');
+                loader.className = 'message ai-message';
+                loader.id = 'loader';
+                loader.innerHTML = `
+                    <span class="sender-name">Nguyễn Tiêu AI</span>
+                    <div class="shimmer">
+                        <div class="shimmer-line" style="width:100%"></div>
+                        <div class="shimmer-line" style="width:60%"></div>
+                    </div>
+                `;
+                box.appendChild(loader);
+                this.scroll();
 
                 try {
-                    this.playBeep('user');
-                    await messagesRef.add({
-                        text: text,
-                        role: 'user',
-                        uid: this.user.uid,
-                        timestamp: Date.now()
-                    });
+                    const path = `/artifacts/${appId}/users/${this.uid}/messages`;
+                    await db.collection(path).add({ role: 'user', text: text, timestamp: Date.now() });
 
-                    typing.style.display = 'block';
-
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_KEY}`, {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            contents: [{ parts: [{ text: text }] }],
-                            systemInstruction: { 
-                                parts: [{ text: "Tên bạn là Nguyễn Tiêu AI. Hãy trả lời thông minh. Nếu người dùng chào hỏi đơn giản như 'Xin chào', 'Hi', 'Hello', hãy đáp lại cực kỳ ngắn gọn và thân thiện (ví dụ: Chào bạn! Tôi có thể giúp gì cho bạn?). Tránh giải thích dài dòng không cần thiết." }] 
-                            }
+                            contents: [...this.history, { role: 'user', parts: [{ text: text }] }],
+                            systemInstruction: { parts: [{ text: "Tên bạn là Nguyễn Tiêu AI. Hãy trả lời cực kỳ thông minh, súc tích, định dạng Markdown đẹp. Tin nhắn người dùng nằm bên phải, tin nhắn của bạn nằm bên trái. Bạn không có avatar, chỉ có tên hiển thị." }] }
                         })
                     });
 
-                    const result = await response.json();
-                    const aiResponse = result.candidates?.[0]?.content?.parts?.[0]?.text || "Hệ thống lõi đang bận...";
+                    const data = await response.json();
+                    const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Lỗi phản hồi.";
 
-                    await messagesRef.add({
-                        text: aiResponse,
-                        role: 'ai',
-                        uid: 'system',
-                        timestamp: Date.now()
-                    });
+                    document.getElementById('loader').remove();
+                    
+                    const bubble = this.renderUI('ai', aiText, true);
+                    let i = 0;
+                    const itv = setInterval(() => {
+                        bubble.innerHTML = marked.parse(aiText.substring(0, i + 1));
+                        i++;
+                        this.scroll();
+                        if (i >= aiText.length) clearInterval(itv);
+                    }, 5);
+
+                    await db.collection(path).add({ role: 'ai', text: aiText, timestamp: Date.now() });
+                    this.history.push({ role: 'user', parts: [{ text: text }] }, { role: 'model', parts: [{ text: aiText }] });
 
                 } catch (e) {
-                    console.error("Chat Error:", e);
-                } finally {
-                    typing.style.display = 'none';
-                }
-            },
-
-            setupVisuals() {
-                const canvas = document.getElementById('bg-canvas');
-                const ctx = canvas.getContext('2d');
-                let nodes = [];
-                const res = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
-                window.onresize = res; res();
-                for(let i=0; i<30; i++) nodes.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3});
-                function loop() {
-                    ctx.fillStyle = '#020205'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    nodes.forEach(n => {
-                        n.x += n.vx; n.y += n.vy;
-                        if(n.x<0 || n.x>canvas.width) n.vx*=-1;
-                        if(n.y<0 || n.y>canvas.height) n.vy*=-1;
-                        ctx.fillStyle = 'rgba(0, 242, 254, 0.2)';
-                        ctx.beginPath(); ctx.arc(n.x, n.y, 1, 0, Math.PI*2); ctx.fill();
-                    });
-                    requestAnimationFrame(loop);
-                }
-                loop();
-            },
-
-            initAudio() {
-                if(!this.audioCtx) {
-                    this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                    const buffer = this.audioCtx.createBuffer(1, 1, 22050);
-                    const source = this.audioCtx.createBufferSource();
-                    source.buffer = buffer;
-                    source.connect(this.audioCtx.destination);
-                    source.start(0);
+                    if(document.getElementById('loader')) document.getElementById('loader').remove();
+                    this.renderUI('ai', "Đã xảy ra lỗi kết nối.");
                 }
             }
         };
