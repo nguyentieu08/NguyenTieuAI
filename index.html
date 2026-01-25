@@ -31,7 +31,7 @@
         .b2 { width: 600px; height: 600px; background: #7028e4; bottom: -10%; right: -10%; animation-delay: -2s; }
         @keyframes moveBlobs { 0% { transform: translate(0, 0); } 100% { transform: translate(150px, 100px); } }
 
-        /* --- HỆ THỐNG BAY BAY (PLEXUS CANVAS) --- */
+        /* --- HỆ THỐNG PLEXUS (BAY BAY) --- */
         #plexus-canvas {
             position: absolute; top: 0; left: 0;
             z-index: 1; pointer-events: none;
@@ -69,7 +69,7 @@
             z-index: 5;
         }
 
-        /* KHUNG ADMIN TOP - ĐÃ SỬA MÀU */
+        /* KHUNG ADMIN TOP */
         .capsule-header {
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(255, 255, 255, 0.05);
@@ -77,31 +77,30 @@
             padding: 12px 25px; border-radius: 20px; margin-bottom: 35px;
         }
         
-        /* MÀU PIN: VÀNG NEON */
         #bat-val { 
-            font-size: 11px; 
-            color: #ffd700; 
-            font-weight: 900; 
-            letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            font-size: 11px; color: #ffd700; font-weight: 900; 
+            letter-spacing: 1px; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
         
-        /* MÀU THỜI GIAN: XANH MINT */
         #time-val { 
-            font-size: 11px; 
-            color: #00ffaa; 
-            font-weight: 900; 
-            letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
+            font-size: 11px; color: #00ffaa; font-weight: 900; 
+            letter-spacing: 1px; text-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
         }
 
         h1 { color: #fff; font-size: 32px; font-weight: 900; letter-spacing: 6px; margin-bottom: 30px; }
 
+        /* INPUT CỐ ĐỊNH */
         input {
             width: 100%; padding: 18px; margin-bottom: 15px;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 25px; color: #fff; text-align: center; outline: none;
+            cursor: not-allowed; /* Hiện icon cấm sửa */
+        }
+        input.admin-user {
+            color: #00f2fe;
+            font-weight: 800;
+            border-color: rgba(0, 242, 254, 0.2);
         }
 
         .btn-init {
@@ -141,16 +140,16 @@
     <div class="neon-frame">
         <div class="glass-card">
             <div class="capsule-header">
-                <span id="bat-val">BATTERY THIẾT BỊ: 80%</span>
+                <span id="bat-val">BATTERY: --%</span>
                 <span id="time-val">00:00:00</span>
             </div>
 
             <h1>LOGIN</h1>
 
-            <input type="text" placeholder="TÀI KHOẢN">
-            <input type="password" placeholder="MẬT KHẨU">
+            <input type="text" class="admin-user" value="NGUYỄN TIÊU DEV" readonly>
+            <input type="password" value="●●●●●●●●●●" readonly>
 
-            <button class="btn-init">ĐĂNG NHẬP</button>
+            <button class="btn-init" onclick="handleLogin()">ĐĂNG NHẬP</button>
 
             <div class="social-dock">
                 <a href="https://www.facebook.com/share/1CTXMD4ctG/" class="social-item" target="_blank">FACEBOOK</a>
@@ -226,6 +225,15 @@
             }
         }
         setInterval(tick, 1000); tick();
+
+        function handleLogin() {
+            const btn = document.querySelector('.btn-init');
+            btn.innerText = "AUTHENTICATING...";
+            setTimeout(() => {
+                alert("Chào mừng sếp NGUYỄN TIÊU quay trở lại!");
+                btn.innerText = "ĐĂNG NHẬP";
+            }, 1200);
+        }
     </script>
 </body>
 </html>
