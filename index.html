@@ -3,204 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MODERN_GLASS_LOGIN</title>
+    <title>DYNAMIC_NEON_FLOW</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
-        :root {
-            --accent: #00ffcc; /* Màu Cyan Neon */
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.1);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Quicksand', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
 
         body {
             height: 100vh;
-            background: #050505;
             display: flex; justify-content: center; align-items: center;
+            background: #000;
             overflow: hidden;
             position: relative;
         }
 
-        /* NỀN AURORA ĐỔI MÀU LIÊN TỤC */
-        .aurora-container {
+        /* --- 1. HIỆU ỨNG NỀN CỰC QUANG ĐỘNG --- */
+        .aurora-bg {
             position: absolute; width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at 10% 10%, #1e1b4b 0%, transparent 50%),
+                radial-gradient(circle at 90% 90%, #312e81 0%, transparent 50%),
+                radial-gradient(circle at 50% 10%, #581c87 0%, transparent 50%),
+                radial-gradient(circle at 10% 90%, #1e3a8a 0%, transparent 50%);
+            filter: blur(100px);
             z-index: 0;
-            background: linear-gradient(135deg, #090909, #0f172a, #1e1b4b, #2e1065, #0f172a);
-            background-size: 400% 400%;
-            animation: auroraAnim 15s ease infinite;
+            animation: backgroundShift 15s ease infinite alternate;
         }
 
-        @keyframes auroraAnim {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        @keyframes backgroundShift {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(5deg); }
+            100% { transform: scale(1) rotate(-5deg); }
         }
 
-        /* LỚP MÂY MÀU LOANG (MESH) */
-        .blob {
-            position: absolute; width: 500px; height: 500px;
-            background: radial-gradient(circle, rgba(0, 255, 204, 0.1) 0%, transparent 70%);
-            filter: blur(80px);
-            animation: drift 20s infinite alternate;
-        }
-
-        @keyframes drift {
-            from { transform: translate(-20%, -20%); }
-            to { transform: translate(20%, 20%); }
-        }
-
-        /* HỘP LOGIN - PHẲNG & SANG TRỌNG */
-        .login-card {
+        /* --- 2. HIỆU ỨNG VIỀN CHẠY (NEON RUNNING) --- */
+        .neon-card-border {
             position: relative;
-            z-index: 10;
             width: 420px;
-            padding: 50px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            border-radius: 50px;
-            border: 1px solid var(--border);
-            box-shadow: 0 40px 100px rgba(0,0,0,0.6);
-            text-align: center;
+            padding: 4px; /* Độ dày của viền chạy */
+            border-radius: 40px;
+            overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 10;
         }
 
-        /* VIỀN SÁNG CHẠY QUANH (REFLACTION) */
-        .login-card::before {
+        /* Tạo dải màu xoay phía sau để làm viền */
+        .neon-card-border::before {
             content: '';
             position: absolute;
-            inset: 0;
-            border-radius: 50px;
-            padding: 2px;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask-composite: exclude;
-            pointer-events: none;
+            width: 200%; height: 200%;
+            background: conic-gradient(
+                transparent, transparent, transparent, 
+                #00f2fe, #f093fb, #00f2fe
+            );
+            animation: rotateBorder 4s linear infinite;
         }
 
-        .header-sys {
+        @keyframes rotateBorder {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Nội dung bên trong hộp kính */
+        .glass-content {
+            position: relative;
+            width: 100%;
+            padding: 50px 40px;
+            background: rgba(10, 10, 10, 0.8); /* Màu nền đục để nổi bật input */
+            backdrop-filter: blur(30px);
+            border-radius: 36px;
+            text-align: center;
+            z-index: 5;
+        }
+
+        .sys-info {
             display: flex; justify-content: space-between;
-            font-size: 10px; color: rgba(255,255,255,0.4);
-            margin-bottom: 40px; letter-spacing: 2px;
-            text-transform: uppercase;
+            font-size: 10px; color: #00f2fe;
+            margin-bottom: 30px; letter-spacing: 2px;
+            font-weight: bold;
         }
 
         h1 {
-            color: #fff; font-weight: 700; font-size: 28px;
-            letter-spacing: 5px; margin-bottom: 5px;
-            text-transform: uppercase;
-        }
-
-        .status-dot {
-            width: 50px; height: 3px; background: var(--accent);
-            margin: 15px auto 35px; border-radius: 5px;
-            box-shadow: 0 0 15px var(--accent);
+            color: #fff; font-size: 26px; font-weight: 700;
+            letter-spacing: 5px; margin-bottom: 30px;
+            text-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
         }
 
         /* INPUTS */
-        .input-group { margin-bottom: 20px; }
+        .input-box { margin-bottom: 20px; position: relative; }
 
         input {
-            width: 100%; padding: 18px 25px;
+            width: 100%; padding: 18px;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 25px;
-            color: #fff; font-size: 15px; outline: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: #fff; font-size: 14px; outline: none;
             transition: 0.3s; text-align: center;
         }
 
         input:focus {
             background: rgba(255, 255, 255, 0.1);
-            border-color: var(--accent);
-            box-shadow: 0 0 20px rgba(0, 255, 204, 0.15);
+            border-color: #00f2fe;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
         }
 
         /* BUTTON LOGIN */
-        .btn-submit {
+        .btn-glow {
             width: 100%; padding: 18px; margin-top: 15px;
-            background: #fff; color: #000;
-            border: none; border-radius: 25px;
-            font-weight: 700; font-size: 15px; letter-spacing: 2px;
+            background: linear-gradient(90deg, #00f2fe, #4facfe);
+            color: #000; border: none; border-radius: 20px;
+            font-weight: 700; letter-spacing: 2px;
             cursor: pointer; transition: 0.4s;
-            text-transform: uppercase;
         }
 
-        .btn-submit:hover {
-            background: var(--accent);
+        .btn-glow:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 255, 204, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.5);
+            filter: brightness(1.2);
         }
 
-        /* SOCIAL LINKS */
-        .footer-social {
+        /* SOCIAL */
+        .socials {
             margin-top: 40px; display: flex; justify-content: center; gap: 20px;
         }
-        .footer-social a {
-            color: rgba(255,255,255,0.3); font-size: 11px;
+        .socials a {
+            color: rgba(255,255,255,0.4); font-size: 11px;
             text-decoration: none; transition: 0.3s;
-            font-weight: 500;
         }
-        .footer-social a:hover { color: #fff; }
-
-        #clock { color: var(--accent); font-weight: 500; }
+        .socials a:hover { color: #00f2fe; }
 
     </style>
 </head>
 <body>
 
-    <div class="aurora-container"></div>
-    <div class="blob" style="top: 10%; left: 15%;"></div>
-    <div class="blob" style="bottom: 10%; right: 15%; background: radial-gradient(circle, rgba(147, 147, 255, 0.1) 0%, transparent 70%);"></div>
+    <div class="aurora-bg"></div>
 
-    <div class="login-card">
-        <div class="header-sys">
-            <span id="bat">BATTERY: --%</span>
-            <span id="clock">00:00:00</span>
-        </div>
+    <div class="neon-card-border">
+        <div class="glass-content">
+            <div class="sys-info">
+                <span id="bat">BAT: --%</span>
+                <span id="clock">00:00:00</span>
+            </div>
 
-        <h1>SECURITY</h1>
-        <div class="status-dot"></div>
+            <h1>AUTHENTIC</h1>
 
-        <div class="input-group">
-            <input type="text" placeholder="ACCESS IDENTITY" autocomplete="off">
-        </div>
-        <div class="input-group">
-            <input type="password" placeholder="SECURE PASSWORD">
-        </div>
+            <div class="input-box">
+                <input type="text" placeholder="USER ID" autocomplete="off">
+            </div>
+            <div class="input-box">
+                <input type="password" placeholder="PASSWORD">
+            </div>
 
-        <button class="btn-submit">INITIALIZE LOGIN</button>
+            <button class="btn-glow">SIGN IN SYSTEM</button>
 
-        <div class="footer-social">
-            <a href="https://www.facebook.com/share/1CTXMD4ctG/" target="_blank">FACEBOOK</a>
-            <a href="https://tiktok.com/@nguyentieulive" target="_blank">TIKTOK</a>
-            <a href="https://zalo.me/0353564018" target="_blank">ZALO</a>
+            <div class="socials">
+                <a href="https://www.facebook.com/share/1CTXMD4ctG/" target="_blank">FACEBOOK</a>
+                <a href="https://tiktok.com/@nguyentieulive" target="_blank">TIKTOK</a>
+                <a href="https://zalo.me/0353564018" target="_blank">ZALO</a>
+            </div>
         </div>
     </div>
 
     <script>
-        // Cập nhật Pin và Giờ
-        function updateUI() {
+        function update() {
             const now = new Date();
             document.getElementById('clock').innerText = now.toLocaleTimeString('vi-VN');
             
             if(navigator.getBattery) {
                 navigator.getBattery().then(b => {
-                    document.getElementById('bat').innerText = `POWER: ${Math.round(b.level * 100)}%`;
+                    document.getElementById('bat').innerText = `BAT: ${Math.round(b.level * 100)}%`;
                 });
             }
         }
-        setInterval(updateUI, 1000);
-        updateUI();
-
-        // Xử lý hiệu ứng click nút
-        document.querySelector('.btn-submit').onclick = function() {
-            this.innerText = "AUTHENTICATING...";
-            setTimeout(() => {
-                alert("Chào mừng sếp Nguyễn Tiêu quay trở lại!");
-                this.innerText = "INITIALIZE LOGIN";
-            }, 1500);
-        }
+        setInterval(update, 1000); update();
     </script>
 </body>
 </html>
