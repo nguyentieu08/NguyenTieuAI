@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PANEL NGUYỄN TIÊU DEV</title>
+    <title>ULTIMATE_FLYING_NEON_2026</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&display=swap');
 
@@ -17,46 +17,51 @@
             position: relative;
         }
 
-        /* --- 1. NỀN AURORA ĐỘNG --- */
-        .aurora-engine {
+        /* --- NỀN AURORA CHUYỂN ĐỘNG --- */
+        .aurora-bg {
             position: absolute; width: 100%; height: 100%;
             z-index: 0; filter: blur(100px);
         }
         .blob {
             position: absolute; border-radius: 50%;
             mix-blend-mode: screen;
-            animation: moveBlobs 10s infinite alternate ease-in-out;
+            animation: moveBlobs 12s infinite alternate ease-in-out;
         }
-        .b1 { width: 800px; height: 800px; background: #00f2fe; top: -20%; left: -10%; }
-        .b2 { width: 600px; height: 600px; background: #7028e4; bottom: -10%; right: -10%; }
-        @keyframes moveBlobs { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(150px, 100px) scale(1.2); } }
+        .b1 { width: 700px; height: 700px; background: #00f2fe; top: -10%; left: -10%; }
+        .b2 { width: 600px; height: 600px; background: #7028e4; bottom: -10%; right: -10%; animation-delay: -2s; }
+        @keyframes moveBlobs { 0% { transform: translate(0, 0); } 100% { transform: translate(150px, 100px); } }
 
-        #sparkle-canvas { position: absolute; top: 0; left: 0; z-index: 1; pointer-events: none; }
+        /* --- HỆ THỐNG BAY BAY (PLEXUS CANVAS) --- */
+        #plexus-canvas {
+            position: absolute; top: 0; left: 0;
+            z-index: 1; pointer-events: none;
+        }
 
-        /* --- 2. VIỀN CHẠY NEON --- */
-        .neon-container {
+        /* --- VIỀN CHẠY NEON --- */
+        .neon-frame {
             position: relative;
             width: 450px;
             padding: 3px;
             border-radius: 50px;
             overflow: hidden;
             z-index: 10;
+            box-shadow: 0 0 40px rgba(0, 242, 254, 0.2);
         }
-        .neon-container::before {
+        .neon-frame::before {
             content: '';
             position: absolute;
             width: 250%; height: 250%;
             top: -75%; left: -75%;
-            background: conic-gradient(#00f2fe, #7028e4, #f093fb, #00f2fe);
-            animation: rotateNeon 3s linear infinite;
+            background: conic-gradient(transparent, #00f2fe, #7028e4, #f093fb, transparent 40%);
+            animation: rotate 3s linear infinite;
         }
-        @keyframes rotateNeon { to { transform: rotate(360deg); } }
+        @keyframes rotate { to { transform: rotate(360deg); } }
 
-        /* --- 3. GLASS CONTENT --- */
-        .glass-box {
+        /* --- NỘI DUNG CHÍNH --- */
+        .glass-card {
             position: relative;
             width: 100%;
-            padding: 45px;
+            padding: 40px;
             background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(50px);
             border-radius: 47px;
@@ -64,138 +69,144 @@
             z-index: 5;
         }
 
-        /* --- 4. KHUNG ADMIN (TOP) --- */
-        .admin-status-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* KHUNG ADMIN TOP */
+        .capsule-header {
+            display: flex; justify-content: space-between; align-items: center;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px 25px;
-            border-radius: 20px;
-            margin-bottom: 40px;
+            padding: 10px 20px; border-radius: 20px; margin-bottom: 35px;
         }
-        .status-item { font-size: 10px; color: #00f2fe; font-weight: 900; letter-spacing: 1px; }
+        .status-text { font-size: 10px; color: #00f2fe; font-weight: 900; letter-spacing: 1px; }
 
-        h1 {
-            color: #fff; font-size: 35px; font-weight: 900;
-            letter-spacing: 8px; margin-bottom: 40px;
-            text-shadow: 0 0 20px #00f2fe;
-        }
+        h1 { color: #fff; font-size: 32px; font-weight: 900; letter-spacing: 6px; margin-bottom: 30px; }
 
         input {
-            width: 100%; padding: 20px; margin-bottom: 20px;
+            width: 100%; padding: 18px; margin-bottom: 15px;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 25px; color: #fff;
-            outline: none; text-align: center; transition: 0.3s;
+            border-radius: 25px; color: #fff; text-align: center; outline: none;
         }
-        input:focus { border-color: #00f2fe; background: rgba(255, 255, 255, 0.08); }
 
-        .btn-main {
-            width: 100%; padding: 20px; margin-top: 10px;
+        .btn-init {
+            width: 100%; padding: 18px; margin-top: 10px;
             background: #fff; color: #000; border: none;
-            border-radius: 25px; font-weight: 900;
-            text-transform: uppercase; cursor: pointer; transition: 0.4s;
+            border-radius: 25px; font-weight: 900; cursor: pointer; transition: 0.3s;
         }
-        .btn-main:hover { background: #00f2fe; box-shadow: 0 0 30px #00f2fe; }
+        .btn-init:hover { background: #00f2fe; box-shadow: 0 0 30px #00f2fe; }
 
-        /* --- 5. KHUNG SOCIAL (BOTTOM) --- */
-        .social-container {
-            margin-top: 45px;
-            display: flex;
-            justify-content: center;
-            gap: 12px;
+        /* KHUNG SOCIAL BOTTOM */
+        .social-dock {
+            margin-top: 40px;
+            display: flex; justify-content: center; gap: 10px;
         }
-        .social-chip {
+        .social-item {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 10px 15px;
-            border-radius: 15px;
-            text-decoration: none;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 9px;
-            font-weight: 900;
-            transition: 0.3s;
-            display: flex; align-items: center;
+            padding: 10px 14px; border-radius: 15px;
+            text-decoration: none; color: rgba(255, 255, 255, 0.5);
+            font-size: 9px; font-weight: 900; transition: 0.3s;
         }
-        .social-chip:hover {
-            background: rgba(0, 242, 254, 0.1);
-            border-color: #00f2fe;
-            color: #fff;
+        .social-item:hover {
+            color: #fff; border-color: #00f2fe; background: rgba(0, 242, 254, 0.1);
             transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.2);
         }
-
     </style>
 </head>
 <body>
 
-    <div class="aurora-engine">
+    <div class="aurora-bg">
         <div class="blob b1"></div>
         <div class="blob b2"></div>
     </div>
 
-    <canvas id="sparkle-canvas"></canvas>
+    <canvas id="plexus-canvas"></canvas>
 
-    <div class="neon-container">
-        <div class="glass-box">
-            <div class="admin-status-bar">
-                <div class="status-item" id="pwr">BAT: --%</div>
-                <div class="status-item" style="opacity: 0.2">●</div>
-                <div class="status-item" id="tm">00:00:00</div>
+    <div class="neon-frame">
+        <div class="glass-card">
+            <div class="capsule-header">
+                <span id="bat-val">BAT: 80%</span>
+                <span id="time-val">00:00:00</span>
             </div>
-            
+
             <h1>LOGIN</h1>
 
             <input type="text" placeholder="USER_ID">
             <input type="password" placeholder="PASSWORD">
 
-            <button class="btn-main">INITIALIZE</button>
+            <button class="btn-init">INITIALIZE</button>
 
-            <div class="social-container">
-                <a href="https://www.facebook.com/share/1CTXMD4ctG/" class="social-chip" target="_blank">FACEBOOK</a>
-                <a href="https://tiktok.com/@nguyentieulive" class="social-chip" target="_blank">TIKTOK</a>
-                <a href="https://zalo.me/0353564018" class="social-chip" target="_blank">ZALO</a>
+            <div class="social-dock">
+                <a href="#" class="social-item">FACEBOOK</a>
+                <a href="#" class="social-item">TIKTOK</a>
+                <a href="#" class="social-item">ZALO</a>
             </div>
         </div>
     </div>
 
     <script>
-        const canvas = document.getElementById('sparkle-canvas');
+        const canvas = document.getElementById('plexus-canvas');
         const ctx = canvas.getContext('2d');
-        let w, h;
-        const resize = () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; };
-        window.onresize = resize; resize();
+        let w, h, particles = [];
+        const mouse = { x: null, y: null, radius: 150 };
 
-        const particles = Array.from({length: 50}, () => ({
-            x: Math.random() * w,
-            y: Math.random() * h,
-            vy: Math.random() * 0.4 + 0.1,
-            size: Math.random() * 1.2,
-            o: Math.random()
-        }));
+        function init() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < 150; i++) { // Tăng số lượng hạt lên 150 cho sếp
+                particles.push({
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    vx: (Math.random() - 0.5) * 1.5,
+                    vy: (Math.random() - 0.5) * 1.5,
+                    size: Math.random() * 2 + 1
+                });
+            }
+        }
 
         function draw() {
             ctx.clearRect(0, 0, w, h);
-            ctx.fillStyle = "rgba(0, 242, 254, 0.4)";
-            particles.forEach(p => {
+            for (let i = 0; i < particles.length; i++) {
+                let p = particles[i];
+                p.x += p.vx; p.y += p.vy;
+
+                if (p.x < 0 || p.x > w) p.vx *= -1;
+                if (p.y < 0 || p.y > h) p.vy *= -1;
+
+                ctx.fillStyle = "rgba(0, 242, 254, 0.5)";
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                 ctx.fill();
-                p.y -= p.vy;
-                if (p.y < -10) p.y = h + 10;
-            });
+
+                // Vẽ dây kết nối giữa các hạt bay bay
+                for (let j = i + 1; j < particles.length; j++) {
+                    let p2 = particles[j];
+                    let dx = p.x - p2.x;
+                    let dy = p.y - p2.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 120) {
+                        ctx.strokeStyle = `rgba(0, 242, 254, ${1 - dist / 120})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+            }
             requestAnimationFrame(draw);
         }
-        draw();
+
+        window.addEventListener('resize', init);
+        init(); draw();
 
         function tick() {
             const d = new Date();
-            document.getElementById('tm').innerText = d.toLocaleTimeString('vi-VN');
+            document.getElementById('time-val').innerText = d.toLocaleTimeString('vi-VN');
             if(navigator.getBattery) {
                 navigator.getBattery().then(b => {
-                    document.getElementById('pwr').innerText = "BAT: " + Math.round(b.level * 100) + "%";
+                    document.getElementById('bat-val').innerText = "BAT: " + Math.round(b.level * 100) + "%";
                 });
             }
         }
