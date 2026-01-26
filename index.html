@@ -11,6 +11,7 @@
             background-color: #050505; 
             color: #fff; 
             font-family: sans-serif; 
+            -webkit-tap-highlight-color: transparent;
         }
         #player-box { 
             width: 100%; 
@@ -25,13 +26,13 @@
             background: linear-gradient(145deg, #111111, #0a0a0a);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
+        input::placeholder { color: #555; }
     </style>
 </head>
 <body>
     <div class="flex flex-col items-center p-4 min-h-screen pb-20">
-        <!-- Header Section -->
         <div class="w-full max-w-lg mt-8 mb-8 text-center">
-            <h1 class="text-4xl font-black tracking-tighter italic">
+            <h1 class="text-4xl font-black tracking-tighter italic text-white">
                 PREMIER <span class="text-red-600">PRO</span>
             </h1>
             <p class="text-gray-500 text-[10px] uppercase tracking-[0.3em] mt-2 font-bold">
@@ -42,9 +43,9 @@
         <div class="w-full max-w-lg space-y-6">
             <div class="relative group">
                 <input type="text" id="videoUrl" placeholder="Dán link video YouTube tại đây..." 
-                    class="w-full bg-[#121212] border border-white/10 rounded-2xl py-5 px-6 outline-none focus:border-red-600 focus:ring-4 focus:ring-red-600/10 transition-all text-sm">
+                    class="w-full bg-[#121212] border border-white/10 rounded-2xl py-5 px-6 outline-none focus:border-red-600 focus:ring-4 focus:ring-red-600/10 transition-all text-sm text-white">
                 <button id="execBtn" onclick="handlePlay()" class="absolute right-3 top-1/2 -translate-y-1/2 bg-red-600 hover:bg-red-700 p-3 rounded-xl transition active:scale-95 shadow-lg">
-                    <i data-lucide="play" class="w-5 h-5 fill-white"></i>
+                    <i data-lucide="play" class="w-5 h-5 fill-white text-white"></i>
                 </button>
             </div>
 
@@ -55,17 +56,20 @@
 
                 <div class="bg-[#111] rounded-[32px] p-6 space-y-4 border border-white/5">
                     <div class="flex items-center justify-between border-b border-white/5 pb-4">
-                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">SECURE MODE</span>
-                        <span class="text-[10px] text-green-500 font-bold">ACTIVE</span>
+                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">TRẠNG THÁI</span>
+                        <span class="text-[10px] text-green-500 font-bold tracking-widest">ĐANG HOẠT ĐỘNG</span>
                     </div>
                     <div class="flex items-center gap-4 text-sm text-gray-300">
                         <i data-lucide="shield-check" class="w-4 h-4 text-blue-500"></i>
-                        <span>Bypass Lỗi 150/153 (API Mode)</span>
+                        <span>Đã kích hoạt chế độ chạy nền</span>
                     </div>
                     <div class="flex items-center gap-4 text-sm text-gray-300">
                         <i data-lucide="music" class="w-4 h-4 text-purple-500"></i>
-                        <span>Phát âm thanh nền (Background)</span>
+                        <span>Chế độ không quảng cáo (Bypass)</span>
                     </div>
+                    <p class="text-[10px] text-gray-600 italic mt-2">
+                        * Mẹo: Nếu nhạc dừng khi tắt màn hình, hãy nhấn nút Play ở thanh thông báo/màn hình khóa.
+                    </p>
                 </div>
             </div>
 
@@ -76,7 +80,7 @@
                             <i data-lucide="user" class="w-8 h-8 text-white"></i>
                         </div>
                     </div>
-                    <h2 class="text-xl font-bold tracking-tight">Thông Tin Admin</h2>
+                    <h2 class="text-xl font-bold tracking-tight text-white">Thông Tin Admin</h2>
                     <p class="text-gray-500 text-xs uppercase tracking-widest">Hỗ trợ & Liên hệ kỹ thuật</p>
                 </div>
 
@@ -122,8 +126,8 @@
         }
 
         function handlePlay() {
-            var url = document.getElementById('videoUrl').value;
-            var videoId = extractVideoId(url);
+            var urlInput = document.getElementById('videoUrl');
+            var videoId = extractVideoId(urlInput.value);
 
             if (!videoId) {
                 alert("Vui lòng nhập link YouTube hợp lệ!");
@@ -133,7 +137,7 @@
             document.getElementById('main-ui').classList.remove('hidden');
             document.getElementById('player-box').style.display = 'block';
 
-            if (player) {
+            if (player && typeof player.loadVideoById === 'function') {
                 player.loadVideoById(videoId);
             } else {
                 player = new YT.Player('player', {
@@ -145,19 +149,47 @@
                         'playsinline': 1,
                         'modestbranding': 1,
                         'rel': 0,
-                        'enablejsapi': 1
+                        'enablejsapi': 1,
+                        'origin': window.location.origin
                     },
                     events: {
-                        'onReady': (event) => event.target.playVideo()
+                        'onReady': onPlayerReady,
+                        'onStateChange': onPlayerStateChange
                     }
                 });
             }
 
+            setupMediaSession(videoId);
+        }
+
+        function onPlayerReady(event) {
+            event.target.playVideo();
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.PLAYING) {
+                navigator.mediaSession.playbackState = 'playing';
+            } else if (event.data === YT.PlayerState.PAUSED) {
+                navigator.mediaSession.playbackState = 'paused';
+            }
+        }
+
+        function setupMediaSession(videoId) {
             if ('mediaSession' in navigator) {
                 navigator.mediaSession.metadata = new MediaMetadata({
-                    title: "Premier Pro Player",
-                    artist: "Admin Support System",
-                    artwork: [{ src: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`, sizes: '480x360', type: 'image/jpg' }]
+                    title: "Premier Pro - Playing",
+                    artist: "Hệ thống Background",
+                    artwork: [
+                        { src: `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`, sizes: '1280x720', type: 'image/jpg' },
+                        { src: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`, sizes: '480x360', type: 'image/jpg' }
+                    ]
+                });
+
+                navigator.mediaSession.setActionHandler('play', () => {
+                    if (player) player.playVideo();
+                });
+                navigator.mediaSession.setActionHandler('pause', () => {
+                    if (player) player.pauseVideo();
                 });
             }
         }
