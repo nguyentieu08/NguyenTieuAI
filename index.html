@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PREMIER PRO MOBILE</title>
+    <title>PREMIER PRO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -39,7 +39,6 @@
 </head>
 <body>
     <div class="flex flex-col items-center p-4 min-h-screen pb-20">
-        <!-- Header Section -->
         <div class="w-full max-w-lg mt-8 mb-8 text-center">
             <h1 class="text-4xl font-black tracking-tighter italic text-white">
                 PREMIER <span class="text-red-600">PRO</span>
@@ -185,7 +184,6 @@
         function onPlayerStateChange(event) {
             if (!('mediaSession' in navigator)) return;
 
-            // Đồng bộ trạng thái Iframe -> Thanh thông báo
             switch(event.data) {
                 case YT.PlayerState.PLAYING:
                     navigator.mediaSession.playbackState = 'playing';
@@ -196,7 +194,7 @@
                     navigator.mediaSession.playbackState = 'paused';
                     break;
                 case YT.PlayerState.ENDED:
-                    player.playVideo(); // Auto loop 24/7
+                    player.playVideo();
                     break;
             }
         }
@@ -211,7 +209,6 @@
                     ]
                 });
 
-                // Xử lý lệnh từ thanh thông báo điều khiển vào App
                 navigator.mediaSession.setActionHandler('play', () => {
                     if (player) {
                         player.playVideo();
@@ -239,7 +236,6 @@
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') {
                 requestWakeLock();
-                // Đồng bộ lại nếu thanh thông báo đã thay đổi trạng thái trong khi tab ẩn
                 if (player && player.getPlayerState) {
                     const state = player.getPlayerState();
                     navigator.mediaSession.playbackState = (state === 1) ? 'playing' : 'paused';
