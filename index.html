@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PREMIER PRO</title>
+    <title>PREMIER PRO 24/7</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -12,6 +12,7 @@
             color: #fff; 
             font-family: sans-serif; 
             -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
         }
         #player-box { 
             width: 100%; 
@@ -26,6 +27,15 @@
             background: linear-gradient(145deg, #111111, #0a0a0a);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
+        .pulse-red {
+            box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+        }
     </style>
 </head>
 <body>
@@ -35,7 +45,7 @@
                 PREMIER <span class="text-red-600">PRO</span>
             </h1>
             <p class="text-gray-500 text-[10px] uppercase tracking-[0.3em] mt-2 font-bold">
-                Hệ thống phát nhạc không giới hạn
+                Hệ thống phát nhạc không giới hạn 24/7
             </p>
         </div>
 
@@ -55,20 +65,20 @@
 
                 <div class="bg-[#111] rounded-[32px] p-6 space-y-4 border border-white/5">
                     <div class="flex items-center justify-between border-b border-white/5 pb-4">
-                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">TRẠNG THÁI</span>
-                        <span class="text-[10px] text-green-500 font-bold tracking-widest">ĐANG HOẠT ĐỘNG</span>
+                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">CHẾ ĐỘ 24/7</span>
+                        <span id="uptime-status" class="text-[10px] text-green-500 font-bold tracking-widest">ĐANG DUY TRÌ</span>
                     </div>
                     <div class="flex items-center gap-4 text-sm text-gray-300">
-                        <i data-lucide="shield-check" class="w-4 h-4 text-blue-500"></i>
-                        <span>Bypass Lỗi 150/153 (API Mode)</span>
-                    </div>
-                    <div class="flex items-center gap-4 text-sm text-gray-300">
-                        <i data-lucide="music" class="w-4 h-4 text-purple-500"></i>
-                        <span>Phát âm thanh nền (Background)</span>
+                        <i data-lucide="infinity" class="w-4 h-4 text-red-500"></i>
+                        <span>Ngăn chặn tự động giải phóng bộ nhớ</span>
                     </div>
                     <div class="flex items-center gap-4 text-sm text-gray-300">
                         <i data-lucide="zap" class="w-4 h-4 text-yellow-500"></i>
-                        <span>Đã chặn quảng cáo & Ngăn ngắt nhạc</span>
+                        <span>Bypass Adblock & Lỗi 150/153 (API)</span>
+                    </div>
+                    <div class="flex items-center gap-4 text-sm text-gray-300">
+                        <i data-lucide="lock" class="w-4 h-4 text-blue-500"></i>
+                        <span>Duy trì âm thanh màn hình khóa</span>
                     </div>
                 </div>
             </div>
@@ -76,7 +86,7 @@
             <div class="admin-card rounded-[32px] p-8 mt-10 space-y-6 shadow-xl">
                 <div class="text-center space-y-2">
                     <div class="inline-block p-1 rounded-full bg-gradient-to-tr from-red-600 to-purple-600 mb-2">
-                        <div class="bg-[#050505] rounded-full p-3">
+                        <div class="bg-[#050505] rounded-full p-3 pulse-red">
                             <i data-lucide="user" class="w-8 h-8 text-white"></i>
                         </div>
                     </div>
@@ -109,30 +119,33 @@
         </div>
     </div>
 
+    <audio id="silent-no-sleep" loop>
+        <source src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
+    </audio>
+
     <script type="text/javascript">
         lucide.createIcons();
 
         var player = null;
         var wakeLock = null;
-        var apiReady = false;
+        var silentPlayer = document.getElementById('silent-no-sleep');
 
-        if (!window.YT) {
-            var tag = document.createElement('script');
-            tag.src = "https://www.youtube.com/iframe_api";
-            var firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-        }
-
-        function onYouTubeIframeAPIReady() {
-            apiReady = true;
-        }
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
         async function requestWakeLock() {
-            if ('wakeLock' in navigator) {
-                try {
+            try {
+                if ('wakeLock' in navigator) {
                     wakeLock = await navigator.wakeLock.request('screen');
-                } catch (err) {}
-            }
+                }
+            } catch (err) {}
+        }
+
+        function keepAlive() {
+            silentPlayer.play().catch(() => {
+            });
         }
 
         function extractVideoId(url) {
@@ -153,7 +166,9 @@
             document.getElementById('main-ui').classList.remove('hidden');
             document.getElementById('player-box').style.display = 'block';
 
-            if (player && player.loadVideoById) {
+            keepAlive(); 
+
+            if (player && typeof player.loadVideoById === 'function') {
                 player.loadVideoById({
                     videoId: videoId,
                     suggestedQuality: 'hd720'
@@ -174,49 +189,70 @@
                         'iv_load_policy': 3
                     },
                     events: {
-                        'onReady': function(e) {
-                            e.target.playVideo();
+                        'onReady': (e) => { 
+                            e.target.playVideo(); 
                             requestWakeLock();
                         },
-                        'onStateChange': onPlayerStateChange
+                        'onStateChange': onPlayerStateChange,
+                        'onError': handlePlayerError
                     }
                 });
             }
             setupMediaSession(videoId);
         }
 
+        function handlePlayerError(e) {
+            setTimeout(() => {
+                if(player && player.loadVideoById) {
+                    player.playVideo();
+                }
+            }, 3000);
+        }
+
         function onPlayerStateChange(event) {
             if (event.data === YT.PlayerState.PLAYING) {
-                if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+                navigator.mediaSession.playbackState = 'playing';
             } else if (event.data === YT.PlayerState.PAUSED) {
-                if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
+                navigator.mediaSession.playbackState = 'paused';
+            }
+            if (event.data === YT.PlayerState.ENDED) {
+                player.playVideo();
             }
         }
 
         function setupMediaSession(videoId) {
             if ('mediaSession' in navigator) {
                 navigator.mediaSession.metadata = new MediaMetadata({
-                    title: "Premier Pro - Chạy Nền Stable",
-                    artist: "Hệ thống Bypass Ads & Background",
+                    title: "Premier Pro - Hệ thống 24/7",
+                    artist: "Hệ thống Duy trì Trực tuyến",
                     artwork: [
                         { src: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`, sizes: '480x360', type: 'image/jpg' }
                     ]
                 });
 
-                navigator.mediaSession.setActionHandler('play', () => { if(player) player.playVideo(); });
-                navigator.mediaSession.setActionHandler('pause', () => { if(player) player.pauseVideo(); });
+                navigator.mediaSession.setActionHandler('play', () => player.playVideo());
+                navigator.mediaSession.setActionHandler('pause', () => player.pauseVideo());
             }
         }
 
         document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'visible' && player && player.getPlayerState() === 1) {
+            if (document.visibilityState === 'visible') {
                 requestWakeLock();
+                if(player && player.getPlayerState() === 2) { 
+                    player.playVideo();
+                }
             }
         });
 
         document.getElementById('videoUrl').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') handlePlay();
         });
+
+        setInterval(() => {
+            if (player && player.getPlayerState && player.getPlayerState() !== 1 && player.getPlayerState() !== 3) {
+                player.playVideo();
+            }
+        }, 30000);
     </script>
 </body>
 </html>
