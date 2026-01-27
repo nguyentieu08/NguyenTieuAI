@@ -16,7 +16,8 @@
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #050505; }
         ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
-        .profile-border { position: relative; padding: 4px; border-radius: 9999px; background: linear-gradient(45deg, #dc2626, #4f46e5); }
+        .profile-container { position: relative; width: 128px; height: 128px; }
+        .profile-glow { position: absolute; inset: -4px; background: linear-gradient(45deg, #dc2626, #4f46e5); border-radius: 9999px; filter: blur(8px); opacity: 0.5; }
     </style>
 </head>
 <body class="pb-24">
@@ -26,7 +27,7 @@
             <div class="wave-bar" style="animation-delay: 0.2s"></div>
             <div class="wave-bar" style="animation-delay: 0.4s"></div>
         </div>
-        <span class="text-[9px] font-bold text-red-500 uppercase tracking-widest uppercase">Premier Pro Active</span>
+        <span class="text-[9px] font-bold text-red-500 uppercase tracking-widest uppercase">Premier Pro Engine v5.0 Active</span>
     </div>
 
     <div class="max-w-4xl mx-auto px-4 pt-12">
@@ -88,14 +89,15 @@
         </div>
 
         <div class="max-w-2xl mx-auto mt-12">
-             <div class="glass rounded-[40px] p-10 flex flex-col items-center text-center space-y-6">
-                <div class="profile-border">
-                    <div class="w-32 h-32 rounded-full overflow-hidden bg-black border-2 border-black">
-                        <img src="https://lh3.googleusercontent.com/d/1X6o8oK1-0O6U-15Vv_36K09N5I-F_7n_" alt="Nguyen Tieu" class="w-full h-full object-cover">
+             <div class="glass rounded-[40px] p-10 flex flex-col items-center text-center space-y-6 border border-white/5">
+                <div class="profile-container">
+                    <div class="profile-glow"></div>
+                    <div class="relative w-full h-full rounded-full overflow-hidden border-2 border-white/20">
+                        <img src="https://sf-static.upanhlaylink.com/img/image_202601272ebbdb5b82ff7c12177a2edde9723d69.jpg" 
+                             alt="Nguyen Tieu Admin" 
+                             class="w-full h-full object-cover shadow-2xl scale-100 transition-transform hover:scale-110 duration-500">
                     </div>
-                    <div class="absolute bottom-1 right-1 bg-green-500 w-7 h-7 rounded-full border-4 border-[#121212] flex items-center justify-center">
-                        <div class="w-2 h-2 bg-white rounded-full animate-ping"></div>
-                    </div>
+                    <div class="absolute bottom-1 right-2 bg-green-500 w-6 h-6 rounded-full border-4 border-[#121212] z-10"></div>
                 </div>
                 <div>
                     <h2 class="text-4xl font-black italic uppercase tracking-tight">Nguyễn Tiểu</h2>
@@ -143,8 +145,8 @@
             uptimeCount++;
             const mins = Math.floor(uptimeCount / 60);
             document.getElementById('uptime-val').innerText = mins + "m";
-            const cpu = Math.floor(Math.random() * (12 - 2) + 2);
-            const mem = (Math.random() * (0.8 - 0.3) + 0.3).toFixed(1);
+            const cpu = Math.floor(Math.random() * (10 - 2) + 2);
+            const mem = (Math.random() * (0.6 - 0.2) + 0.2).toFixed(1);
             document.getElementById('cpu-val').innerText = cpu + "%";
             document.getElementById('mem-val').innerText = mem + "GB";
         }
@@ -232,4 +234,3 @@
     </script>
 </body>
 </html>
-
