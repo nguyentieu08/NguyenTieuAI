@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PREMIER PRO | 24/7 AUTO-NEXT</title>
+    <title>PREMIER PRO | 24/7</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -132,7 +132,6 @@
 
     <script type="text/javascript">
         lucide.createIcons();
-
         let wakeLock = null;
 
         async function requestWakeLock() {
@@ -145,12 +144,6 @@
                 }
             } catch (err) {}
         }
-
-        document.addEventListener('visibilitychange', async () => {
-            if (wakeLock !== null && document.visibilityState === 'visible') {
-                await requestWakeLock();
-            }
-        });
 
         function enableNoSleep() {
             const noSleepVideo = document.getElementById('noSleepVideo');
@@ -175,19 +168,17 @@
         function handlePlay() {
             var url = document.getElementById('videoUrl').value;
             var videoId = extractVideoId(url);
-
             if (!videoId) return;
 
             enableNoSleep();
-
             document.getElementById('main-ui').classList.remove('hidden');
             document.getElementById('player-box').style.display = 'block';
-            document.getElementById('sync-status').innerText = "DISCOVERING NEXT...";
+            document.getElementById('sync-status').innerText = "STABILIZING...";
 
             if (player) {
                 player.loadPlaylist({
-                    listType: 'search',
-                    list: videoId,
+                    playlist: [videoId],
+                    listType: 'playlist',
                     index: 0
                 });
             } else {
@@ -199,24 +190,30 @@
                         'playsinline': 1,
                         'modestbranding': 1,
                         'rel': 0,
-                        'enablejsapi': 1
+                        'enablejsapi': 1,
+                        'playlist': videoId 
                     },
                     events: {
                         'onReady': (event) => {
-                            event.target.loadPlaylist({
-                                listType: 'search',
-                                list: videoId, 
-                                index: 0
-                            });
-                            document.getElementById('sync-status').innerText = "AUTO-NEXT READY";
+                            document.getElementById('sync-status').innerText = "CONNECTED";
                         },
                         'onStateChange': (event) => {
                             if (event.data === YT.PlayerState.ENDED) {
-                                player.nextVideo();
+                                document.getElementById('sync-status').innerText = "AUTO-SWITCHING...";
+                                // Ép buộc chuyển video khác nếu là playlist hoặc nhảy đến video đề xuất ngẫu nhiên
+                                if(player.getPlaylist() && player.getPlaylist().length > 1) {
+                                    player.nextVideo();
+                                } else {
+                                    // Backup: Nếu không có playlist, ta tải lại chính video đó để duy trì treo web
+                                    player.playVideo();
+                                }
                             }
                         },
-                        'onError': () => {
-                            player.nextVideo();
+                        'onError': (event) => {
+                            // Tự động nhảy qua nếu video bị lỗi nhúng
+                            console.log("Player Error, skipping...");
+                            player.stopVideo();
+                            handlePlay(); 
                         }
                     }
                 });
