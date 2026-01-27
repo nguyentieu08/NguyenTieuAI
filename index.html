@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PREMIER PRO | NGUYEN TIEU ADMIN</title>
+    <title>PREMIER PRO | NGUYEN TIEU DEV</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -94,9 +94,10 @@
                 <div class="profile-container">
                     <div class="profile-glow"></div>
                     <div class="relative w-full h-full rounded-full overflow-hidden border-2 border-white/20">
-                        <img src="https://sf-static.upanhlaylink.com/img/image_202601272ebbdb5b82ff7c12177a2edde9723d69.jpg" 
+                        <img src="https://lh3.googleusercontent.com/d/1Bf2R7x3O5uK_o6uY5uQ6I6pU7z6_hN5U" 
                              alt="Nguyen Tieu Admin" 
-                             class="w-full h-full object-cover shadow-2xl">
+                             class="w-full h-full object-cover shadow-2xl"
+                             onerror="this.src='https://sf-static.upanhlaylink.com/img/image_202601272ebbdb5b82ff7c12177a2edde9723d69.jpg'">
                     </div>
                     <div class="absolute bottom-1 right-2 bg-green-500 w-6 h-6 rounded-full border-4 border-[#121212] z-10"></div>
                 </div>
@@ -168,13 +169,23 @@
                     title: title || 'Premier Pro Stream',
                     artist: 'Nguyễn Tiêu Admin',
                     artwork: [
-                        { src: 'https://sf-static.upanhlaylink.com/img/image_202601272ebbdb5b82ff7c12177a2edde9723d69.jpg', sizes: '512x512', type: 'image/jpg' }
+                        { src: 'https://lh3.googleusercontent.com/d/1Bf2R7x3O5uK_o6uY5uQ6I6pU7z6_hN5U', sizes: '512x512', type: 'image/jpg' }
                     ]
                 });
-                navigator.mediaSession.setActionHandler('play', () => player.playVideo());
-                navigator.mediaSession.setActionHandler('pause', () => player.pauseVideo());
-                navigator.mediaSession.setActionHandler('nexttrack', () => {});
-                navigator.mediaSession.setActionHandler('previoustrack', () => {});
+                navigator.mediaSession.setActionHandler('play', () => {
+                    player.playVideo();
+                    navigator.mediaSession.playbackState = "playing";
+                });
+                navigator.mediaSession.setActionHandler('pause', () => {
+                    player.pauseVideo();
+                    navigator.mediaSession.playbackState = "paused";
+                });
+                navigator.mediaSession.setActionHandler('nexttrack', () => {
+                    console.log('Next track signal');
+                });
+                navigator.mediaSession.setActionHandler('previoustrack', () => {
+                    console.log('Previous track signal');
+                });
             }
         }
 
@@ -229,11 +240,15 @@
                         'onReady': (e) => {
                             const data = e.target.getVideoData();
                             updateMediaSession(data.title);
+                            navigator.mediaSession.playbackState = "playing";
                         },
                         'onStateChange': (e) => {
                             if (e.data === YT.PlayerState.PLAYING) {
                                 const data = player.getVideoData();
                                 updateMediaSession(data.title);
+                                navigator.mediaSession.playbackState = "playing";
+                            } else if (e.data === YT.PlayerState.PAUSED) {
+                                navigator.mediaSession.playbackState = "paused";
                             }
                         }
                     }
