@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PREMIER PRO | NGUYEN TIEU DEV</title>
+    <title>PREMIER PRO | NGUYEN TIEU ADMIN</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -16,13 +16,7 @@
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #050505; }
         ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
-        .gradient-text { background: linear-gradient(to right, #ef4444, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .animate-float { animation: float 3s ease-in-out infinite; }
-        .spin-slow { animation: spin 8s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .profile-border { position: relative; padding: 4px; border-radius: 9999px; background: linear-gradient(45deg, #dc2626, #4f46e5); }
     </style>
 </head>
 <body class="pb-24">
@@ -32,7 +26,7 @@
             <div class="wave-bar" style="animation-delay: 0.2s"></div>
             <div class="wave-bar" style="animation-delay: 0.4s"></div>
         </div>
-        <span class="text-[9px] font-bold text-red-500 uppercase tracking-widest uppercase">Premier Pro Engine v5.0 Active</span>
+        <span class="text-[9px] font-bold text-red-500 uppercase tracking-widest uppercase">Premier Pro Active</span>
     </div>
 
     <div class="max-w-4xl mx-auto px-4 pt-12">
@@ -49,153 +43,91 @@
 
         <section class="mb-12">
             <div class="relative max-w-lg mx-auto group">
-                <input type="text" id="videoUrl" placeholder="Dán link YouTube..." 
-                    class="w-full bg-[#111] border border-white/10 rounded-3xl py-6 px-8 outline-none focus:border-red-600 focus:ring-4 focus:ring-red-600/10 transition-all text-sm text-white">
+                <input type="text" id="videoUrl" placeholder="Dán link YouTube tại đây..." 
+                    class="w-full bg-[#111] border border-white/10 rounded-3xl py-6 px-8 outline-none focus:border-red-600 focus:ring-4 focus:ring-red-600/10 transition-all text-sm text-white shadow-2xl">
                 <button onclick="handlePlay()" class="absolute right-3 top-1/2 -translate-y-1/2 bg-red-600 hover:bg-red-700 p-4 rounded-2xl transition active:scale-95 shadow-xl">
                     <i data-lucide="zap" class="w-6 h-6 fill-white"></i>
                 </button>
             </div>
         </section>
 
-        <div id="main-ui" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-10 duration-700">
-            <div class="lg:col-span-2 space-y-6">
-                <div id="player-box" class="shadow-2xl ring-1 ring-white/10">
-                    <div id="player"></div>
-                </div>
-
-                <div class="glass rounded-[32px] p-8">
-                    <div class="flex items-center justify-between mb-8">
-                        <h3 class="font-bold text-lg flex items-center gap-2 italic">
-                            <i data-lucide="activity" class="text-red-500"></i> SYSTEM DASHBOARD
-                        </h3>
-                        <span class="text-[10px] bg-red-600 px-2 py-1 rounded font-bold uppercase">Live</span>
-                    </div>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        <div class="p-4 bg-white/5 rounded-2xl border border-white/5 text-center">
-                            <p class="text-gray-500 text-[10px] font-bold uppercase mb-1">CPU Load</p>
-                            <p id="cpu-val" class="text-xl font-bold tracking-tighter">12%</p>
-                        </div>
-                        <div class="p-4 bg-white/5 rounded-2xl border border-white/5 text-center">
-                            <p class="text-gray-500 text-[10px] font-bold uppercase mb-1">Memory</p>
-                            <p id="mem-val" class="text-xl font-bold tracking-tighter">0.8GB</p>
-                        </div>
-                        <div class="p-4 bg-white/5 rounded-2xl border border-white/5 text-center">
-                            <p class="text-gray-500 text-[10px] font-bold uppercase mb-1">Uptime</p>
-                            <p id="uptime-val" class="text-xl font-bold tracking-tighter text-red-500">0m</p>
-                        </div>
-                        <div class="p-4 bg-white/5 rounded-2xl border border-white/5 text-center">
-                            <p class="text-gray-500 text-[10px] font-bold uppercase mb-1">Threads</p>
-                            <p class="text-xl font-bold tracking-tighter">24/24</p>
-                        </div>
-                    </div>
-                </div>
+        <div id="main-ui" class="hidden animate-in fade-in slide-in-from-bottom-10 duration-700">
+            <div id="player-box" class="shadow-2xl ring-1 ring-white/10 mb-8 max-w-3xl mx-auto">
+                <div id="player"></div>
             </div>
 
-            <div class="space-y-6">
-                <div class="glass rounded-[32px] p-6">
-                    <div class="flex gap-2 mb-6">
-                        <button onclick="switchTab('notes')" class="flex-1 py-2 rounded-xl bg-red-600 text-[10px] font-bold uppercase tracking-widest tab-btn" data-tab="notes">Notes</button>
-                        <button onclick="switchTab('tasks')" class="flex-1 py-2 rounded-xl bg-white/5 text-[10px] font-bold uppercase tracking-widest tab-btn" data-tab="tasks">Tasks</button>
-                    </div>
-
-                    <div id="tab-notes" class="tab-content active space-y-4">
-                        <textarea id="note-pad" class="w-full h-40 bg-black/40 border border-white/10 rounded-2xl p-4 text-xs outline-none focus:border-red-500 transition-colors" placeholder="Ghi chú nhanh tại đây..."></textarea>
-                        <button onclick="saveNote()" class="w-full py-3 bg-white text-black font-bold text-xs rounded-xl hover:bg-gray-200 transition">LƯU GHI CHÚ</button>
-                    </div>
-
-                    <div id="tab-tasks" class="tab-content space-y-3">
-                        <div class="flex gap-2 mb-4">
-                            <input type="text" id="task-input" class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-xs outline-none" placeholder="Việc cần làm...">
-                            <button onclick="addTask()" class="p-2 bg-red-600 rounded-xl"><i data-lucide="plus" class="w-4 h-4"></i></button>
-                        </div>
-                        <ul id="task-list" class="space-y-2 max-h-48 overflow-y-auto pr-2"></ul>
+            <div class="glass rounded-[32px] p-8 max-w-3xl mx-auto mb-8">
+                <div class="flex items-center justify-between mb-8">
+                    <h3 class="font-bold text-lg flex items-center gap-2 italic">
+                        <i data-lucide="activity" class="text-red-500"></i> SYSTEM DASHBOARD
+                    </h3>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] text-green-500 font-bold uppercase">Engine Connected</span>
+                        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                     </div>
                 </div>
-
-                <div class="glass rounded-[32px] p-6 text-center">
-                    <h4 class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4 italic">Mini Game Treo Máy</h4>
-                    <div id="game-area" class="relative w-full aspect-square bg-black/60 rounded-2xl overflow-hidden border border-white/5 cursor-crosshair">
-                        <div id="target" class="absolute w-8 h-8 bg-red-600 rounded-full shadow-[0_0_20px_rgba(220,38,38,0.5)] animate-float" onclick="hitTarget()"></div>
-                        <p class="absolute bottom-2 left-2 text-[10px] font-bold text-gray-500">Score: <span id="score" class="text-white">0</span></p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div class="p-4 bg-white/5 rounded-2xl border border-white/5 text-center">
+                        <p class="text-gray-500 text-[10px] font-bold uppercase mb-1">CPU Load</p>
+                        <p id="cpu-val" class="text-xl font-bold tracking-tighter">--%</p>
+                    </div>
+                    <div class="p-4 bg-white/5 rounded-2xl border border-white/5 text-center">
+                        <p class="text-gray-500 text-[10px] font-bold uppercase mb-1">Memory</p>
+                        <p id="mem-val" class="text-xl font-bold tracking-tighter">--GB</p>
+                    </div>
+                    <div class="p-4 bg-white/5 rounded-2xl border border-white/5 text-center">
+                        <p class="text-gray-500 text-[10px] font-bold uppercase mb-1">Uptime</p>
+                        <p id="uptime-val" class="text-xl font-bold tracking-tighter text-red-500">0m</p>
+                    </div>
+                    <div class="p-4 bg-white/5 rounded-2xl border border-white/5 text-center">
+                        <p class="text-gray-500 text-[10px] font-bold uppercase mb-1">Status</p>
+                        <p class="text-xl font-bold tracking-tighter uppercase text-[12px] pt-1 text-blue-400">Streaming</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
+        <div class="max-w-2xl mx-auto mt-12">
              <div class="glass rounded-[40px] p-10 flex flex-col items-center text-center space-y-6">
-                <div class="relative">
-                    <div class="w-32 h-32 rounded-full border-4 border-red-600 p-1 spin-slow">
-                        <div class="w-full h-full rounded-full bg-cover bg-center border-2 border-black" style="background-image: url('1000000260.jpg');"></div>
+                <div class="profile-border">
+                    <div class="w-32 h-32 rounded-full overflow-hidden bg-black border-2 border-black">
+                        <img src="https://lh3.googleusercontent.com/d/1X6o8oK1-0O6U-15Vv_36K09N5I-F_7n_" alt="Nguyen Tieu" class="w-full h-full object-cover">
                     </div>
-                    <div class="absolute -bottom-2 -right-2 bg-green-500 w-8 h-8 rounded-full border-4 border-[#050505] flex items-center justify-center">
-                        <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                    <div class="absolute bottom-1 right-1 bg-green-500 w-7 h-7 rounded-full border-4 border-[#121212] flex items-center justify-center">
+                        <div class="w-2 h-2 bg-white rounded-full animate-ping"></div>
                     </div>
                 </div>
                 <div>
-                    <h2 class="text-3xl font-black italic uppercase">Nguyễn Tiêu</h2>
-                    <p class="text-red-500 text-[10px] font-bold uppercase tracking-[0.4em] mt-1">Lead Developer & Admin</p>
+                    <h2 class="text-4xl font-black italic uppercase tracking-tight">Nguyễn Tiểu</h2>
+                    <p class="text-red-500 text-[10px] font-bold uppercase tracking-[0.4em] mt-2">Lead Developer & Admin</p>
                 </div>
-                <div class="flex gap-4">
-                    <a href="https://www.facebook.com/share/18EVigUwxz/" target="_blank" class="p-4 bg-white/5 rounded-2xl hover:bg-blue-600/20 transition-all border border-white/5 group">
+                <div class="grid grid-cols-3 gap-4 w-full">
+                    <a href="https://www.facebook.com/share/18EVigUwxz/" target="_blank" class="flex flex-col items-center gap-2 p-5 bg-white/5 rounded-2xl hover:bg-blue-600/20 transition-all border border-white/5 group">
                         <i data-lucide="facebook" class="w-6 h-6 text-blue-500 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-gray-400">Facebook</span>
                     </a>
-                    <a href="https://zalo.me/0353564018" target="_blank" class="p-4 bg-white/5 rounded-2xl hover:bg-cyan-600/20 transition-all border border-white/5 group">
+                    <a href="https://zalo.me/0353564018" target="_blank" class="flex flex-col items-center gap-2 p-5 bg-white/5 rounded-2xl hover:bg-cyan-600/20 transition-all border border-white/5 group">
                         <i data-lucide="message-circle" class="w-6 h-6 text-cyan-400 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-gray-400">Zalo</span>
                     </a>
-                    <a href="https://tiktok.com/@nguyentieulive" target="_blank" class="p-4 bg-white/5 rounded-2xl hover:bg-pink-600/20 transition-all border border-white/5 group">
+                    <a href="https://tiktok.com/@nguyentieulive" target="_blank" class="flex flex-col items-center gap-2 p-5 bg-white/5 rounded-2xl hover:bg-pink-600/20 transition-all border border-white/5 group">
                         <svg class="w-6 h-6 fill-current text-white group-hover:scale-110 transition-transform" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.06-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.03 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.9-.32-1.98-.23-2.8.12-.95.41-1.64 1.35-1.7 2.39-.07.46-.06.92.01 1.37.17 1.02.9 1.93 1.81 2.4.5.27 1.06.39 1.63.46.12.01.24.03.36.03.81.02 1.6-.3 2.2-.83.99-.84 1.32-2.2 1.32-3.44.03-4.85.09-9.7.03-14.55z"/></svg>
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-gray-400">TikTok</span>
                     </a>
-                </div>
-            </div>
-
-            <div class="glass rounded-[40px] p-10 space-y-6">
-                <h3 class="text-xl font-bold italic border-b border-white/5 pb-4">HỆ SINH THÁI</h3>
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5">
-                        <div class="flex items-center gap-4">
-                            <div class="p-3 bg-red-600/20 rounded-xl text-red-500"><i data-lucide="shield"></i></div>
-                            <div>
-                                <p class="font-bold text-sm">Security Hub</p>
-                                <p class="text-[10px] text-gray-500 uppercase tracking-tighter">Bảo mật đa lớp</p>
-                            </div>
-                        </div>
-                        <i data-lucide="chevron-right" class="text-gray-700 w-4 h-4"></i>
-                    </div>
-                    <div class="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5">
-                        <div class="flex items-center gap-4">
-                            <div class="p-3 bg-blue-600/20 rounded-xl text-blue-500"><i data-lucide="cloud"></i></div>
-                            <div>
-                                <p class="font-bold text-sm">Cloud Sync</p>
-                                <p class="text-[10px] text-gray-500 uppercase tracking-tighter">Đồng bộ đám mây</p>
-                            </div>
-                        </div>
-                        <i data-lucide="chevron-right" class="text-gray-700 w-4 h-4"></i>
-                    </div>
-                    <div class="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5">
-                        <div class="flex items-center gap-4">
-                            <div class="p-3 bg-orange-600/20 rounded-xl text-orange-500"><i data-lucide="database"></i></div>
-                            <div>
-                                <p class="font-bold text-sm">Real-time DB</p>
-                                <p class="text-[10px] text-gray-500 uppercase tracking-tighter">Dữ liệu thời gian thực</p>
-                            </div>
-                        </div>
-                        <i data-lucide="chevron-right" class="text-gray-700 w-4 h-4"></i>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-lg glass rounded-full p-2 flex justify-between items-center z-50">
-        <button onclick="scrollToTop()" class="p-4 bg-white/5 rounded-full hover:bg-white/10 transition"><i data-lucide="home" class="w-5 h-5"></i></button>
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-lg glass rounded-full p-2 flex justify-between items-center z-50 border border-white/10 shadow-2xl">
+        <button onclick="scrollToTop()" class="p-4 bg-white/5 rounded-full hover:bg-white/10 transition"><i data-lucide="home" class="w-5 h-5 text-gray-400"></i></button>
         <div class="flex gap-2">
-            <div class="px-6 py-3 bg-red-600 rounded-full flex items-center gap-3">
+            <div class="px-6 py-3 bg-red-600 rounded-full flex items-center gap-3 shadow-lg shadow-red-600/20">
                 <div class="w-2 h-2 bg-white rounded-full animate-ping"></div>
                 <span class="text-[10px] font-black uppercase tracking-widest">System Online</span>
             </div>
         </div>
-        <button onclick="window.location.reload()" class="p-4 bg-white/5 rounded-full hover:bg-white/10 transition"><i data-lucide="refresh-cw" class="w-5 h-5"></i></button>
+        <button onclick="window.location.reload()" class="p-4 bg-white/5 rounded-full hover:bg-white/10 transition"><i data-lucide="refresh-cw" class="w-5 h-5 text-gray-400"></i></button>
     </div>
 
     <video id="noSleepVideo" loop playsinline muted style="display:none;"></video>
@@ -203,7 +135,6 @@
     <script>
         lucide.createIcons();
         let wakeLock = null;
-        let score = 0;
         let uptimeCount = 0;
 
         function updateClock() {
@@ -212,65 +143,12 @@
             uptimeCount++;
             const mins = Math.floor(uptimeCount / 60);
             document.getElementById('uptime-val').innerText = mins + "m";
-            const cpu = Math.floor(Math.random() * (20 - 5) + 5);
-            const mem = (Math.random() * (1.2 - 0.5) + 0.5).toFixed(1);
+            const cpu = Math.floor(Math.random() * (12 - 2) + 2);
+            const mem = (Math.random() * (0.8 - 0.3) + 0.3).toFixed(1);
             document.getElementById('cpu-val').innerText = cpu + "%";
             document.getElementById('mem-val').innerText = mem + "GB";
         }
         setInterval(updateClock, 1000);
-
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => {
-                b.classList.remove('bg-red-600');
-                b.classList.add('bg-white/5');
-            });
-            document.getElementById('tab-' + tab).classList.add('active');
-            const btn = document.querySelector(`[data-tab="${tab}"]`);
-            btn.classList.remove('bg-white/5');
-            btn.classList.add('bg-red-600');
-        }
-
-        function addTask() {
-            const input = document.getElementById('task-input');
-            if(!input.value) return;
-            const li = document.createElement('li');
-            li.className = "flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5 animate-in fade-in slide-in-from-left-5";
-            li.innerHTML = `<span class="text-xs">${input.value}</span><button onclick="this.parentElement.remove()" class="text-red-500"><i data-lucide="x" class="w-4 h-4"></i></button>`;
-            document.getElementById('task-list').prepend(li);
-            input.value = "";
-            lucide.createIcons();
-        }
-
-        function saveNote() {
-            const note = document.getElementById('note-pad').value;
-            localStorage.setItem('premier_note', note);
-            const btn = event.target;
-            btn.innerText = "ĐÃ LƯU!";
-            setTimeout(() => btn.innerText = "LƯU GHI CHÚ", 2000);
-        }
-
-        window.onload = () => {
-            const saved = localStorage.getItem('premier_note');
-            if(saved) document.getElementById('note-pad').value = saved;
-            moveTarget();
-        };
-
-        function hitTarget() {
-            score++;
-            document.getElementById('score').innerText = score;
-            moveTarget();
-        }
-
-        function moveTarget() {
-            const area = document.getElementById('game-area');
-            const target = document.getElementById('target');
-            if(!area || !target) return;
-            const maxX = area.clientWidth - 40;
-            const maxY = area.clientHeight - 40;
-            target.style.left = Math.random() * maxX + "px";
-            target.style.top = Math.random() * maxY + "px";
-        }
 
         async function requestWakeLock() {
             try {
@@ -317,7 +195,13 @@
                     height: '100%',
                     width: '100%',
                     videoId: videoId,
-                    playerVars: { 'autoplay': 1, 'playsinline': 1, 'modestbranding': 1, 'rel': 0 },
+                    playerVars: { 
+                        'autoplay': 1, 
+                        'playsinline': 1, 
+                        'modestbranding': 1, 
+                        'rel': 0,
+                        'origin': window.location.origin 
+                    },
                     events: {
                         'onStateChange': (e) => {
                             if (e.data === YT.PlayerState.ENDED) {
@@ -325,11 +209,17 @@
                             }
                         },
                         'onError': () => {
-                            setTimeout(() => player.playVideo(), 3000);
+                            setTimeout(() => player.playVideo(), 2000);
                         }
                     }
                 });
             }
+            scrollToPlayer();
+        }
+
+        function scrollToPlayer() {
+            const el = document.getElementById('main-ui');
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function scrollToTop() {
