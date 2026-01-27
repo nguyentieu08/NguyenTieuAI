@@ -11,7 +11,6 @@
             background-color: #050505; 
             color: #fff; 
             font-family: sans-serif; 
-            -webkit-tap-highlight-color: transparent;
         }
         #player-box { 
             width: 100%; 
@@ -25,19 +24,6 @@
         .admin-card {
             background: linear-gradient(145deg, #111111, #0a0a0a);
             border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .avatar-frame {
-            position: relative;
-            width: 100px;
-            height: 100px;
-            margin: 0 auto;
-        }
-        .avatar-img {
-            width: 100%;
-            height: 100%;
-            object-cover: cover;
-            border-radius: 50%;
-            border: 3px solid #dc2626;
         }
     </style>
 </head>
@@ -61,33 +47,38 @@
                 </button>
             </div>
 
-            <div id="main-ui" class="hidden">
+            <div id="main-ui" class="hidden animate-in fade-in duration-500">
                 <div id="player-box" class="mb-6 shadow-2xl">
                     <div id="player"></div>
                 </div>
 
                 <div class="bg-[#111] rounded-[32px] p-6 space-y-4 border border-white/5">
                     <div class="flex items-center justify-between border-b border-white/5 pb-4">
-                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">TRẠNG THÁI</span>
-                        <span class="text-[10px] text-green-500 font-bold">ĐANG CHẠY NỀN</span>
+                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">SECURE MODE</span>
+                        <span class="text-[10px] text-green-500 font-bold">ACTIVE</span>
                     </div>
                     <div class="flex items-center gap-4 text-sm text-gray-300">
-                        <i data-lucide="music" class="w-4 h-4 text-red-500"></i>
-                        <span id="video-title">Đang tải thông tin...</span>
+                        <i data-lucide="shield-check" class="w-4 h-4 text-blue-500"></i>
+                        <span>Bypass Lỗi 150/153 (API Mode)</span>
+                    </div>
+                    <div class="flex items-center gap-4 text-sm text-gray-300">
+                        <i data-lucide="music" class="w-4 h-4 text-purple-500"></i>
+                        <span>Phát âm thanh nền (Background)</span>
                     </div>
                 </div>
             </div>
 
             <div class="admin-card rounded-[32px] p-8 mt-10 space-y-6 shadow-xl">
-                <div class="text-center space-y-4">
-                    <div class="avatar-frame">
-                        <img src="https://sf-static.upanhlaylink.com/img/image_202601272ebbdb5b82ff7c12177a2edde9723d69.jpg" class="avatar-img" alt="Nguyễn Tiêu">
-                        <div class="absolute bottom-1 right-1 w-4 h-4 bg-green-500 border-2 border-[#050505] rounded-full"></div>
+                <div class="text-center space-y-2">
+                    <div class="inline-block p-1 rounded-full bg-gradient-to-tr from-red-600 to-purple-600 mb-2">
+                        <div class="bg-[#050505] rounded-full overflow-hidden w-20 h-20 mx-auto">
+                            <img src="https://sf-static.upanhlaylink.com/img/image_202601272ebbdb5b82ff7c12177a2edde9723d69.jpg" 
+                                 alt="Nguyễn Tiêu" 
+                                 class="w-full h-full object-cover">
+                        </div>
                     </div>
-                    <div>
-                        <h2 class="text-2xl font-bold tracking-tight">Nguyễn Tiêu</h2>
-                        <p class="text-gray-500 text-[10px] uppercase tracking-widest font-bold">Lead Developer & Admin</p>
-                    </div>
+                    <h2 class="text-xl font-bold tracking-tight">Nguyễn Tiêu</h2>
+                    <p class="text-gray-500 text-xs uppercase tracking-widest">Hỗ trợ & Liên hệ kỹ thuật</p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
@@ -97,7 +88,7 @@
                     </a>
                     
                     <a href="https://tiktok.com/@nguyentieulive" target="_blank" class="flex items-center gap-3 bg-white/5 hover:bg-pink-600/20 p-4 rounded-2xl border border-white/5 transition-all group">
-                        <i data-lucide="video" class="w-5 h-5 text-white group-hover:scale-110 transition-transform"></i>
+                        <svg class="w-5 h-5 fill-current text-white group-hover:scale-110 transition-transform" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.06-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.03 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.9-.32-1.98-.23-2.8.12-.95.41-1.64 1.35-1.7 2.39-.07.46-.06.92.01 1.37.17 1.02.9 1.93 1.81 2.4.5.27 1.06.39 1.63.46.12.01.24.03.36.03.81.02 1.6-.3 2.2-.83.99-.84 1.32-2.2 1.32-3.44.03-4.85.09-9.7.03-14.55z"/></svg>
                         <span class="text-sm font-medium">TikTok</span>
                     </a>
 
@@ -115,9 +106,6 @@
         </div>
     </div>
 
-    <!-- Hidden Bridge for Background Play -->
-    <audio id="audioBridge" loop style="display:none;"></audio>
-
     <script type="text/javascript">
         lucide.createIcons();
 
@@ -127,7 +115,6 @@
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
         var player;
-        var bridge = document.getElementById('audioBridge');
 
         function extractVideoId(url) {
             var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -142,10 +129,6 @@
             if (!videoId) {
                 return;
             }
-
-            // Kích hoạt chế độ chạy ngầm bằng cách phát một âm thanh lặng
-            bridge.src = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=";
-            bridge.play().catch(function(){});
 
             document.getElementById('main-ui').classList.remove('hidden');
             document.getElementById('player-box').style.display = 'block';
@@ -165,46 +148,29 @@
                         'enablejsapi': 1
                     },
                     events: {
-                        'onReady': onPlayerReady,
-                        'onStateChange': onPlayerStateChange
+                        'onReady': (event) => {
+                            event.target.playVideo();
+                            updateMediaSession(videoId);
+                        },
+                        'onStateChange': (event) => {
+                            if (event.data === YT.PlayerState.PLAYING) {
+                                updateMediaSession(videoId);
+                            }
+                        }
                     }
                 });
             }
         }
 
-        function onPlayerReady(event) {
-            event.target.playVideo();
-            updateMediaSession();
-        }
-
-        function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.PLAYING) {
-                document.getElementById('video-title').innerText = player.getVideoData().title;
-                updateMediaSession();
-                bridge.play().catch(function(){});
-            } else if (event.data == YT.PlayerState.PAUSED) {
-                bridge.pause();
-            }
-        }
-
-        function updateMediaSession() {
-            if ('mediaSession' in navigator && player) {
-                var data = player.getVideoData();
+        function updateMediaSession(videoId) {
+            if ('mediaSession' in navigator) {
                 navigator.mediaSession.metadata = new MediaMetadata({
-                    title: data.title,
+                    title: "Premier Pro Player",
                     artist: "Nguyễn Tiêu Admin",
                     artwork: [
+                        { src: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`, sizes: '480x360', type: 'image/jpg' },
                         { src: 'https://sf-static.upanhlaylink.com/img/image_202601272ebbdb5b82ff7c12177a2edde9723d69.jpg', sizes: '512x512', type: 'image/jpg' }
                     ]
-                });
-
-                navigator.mediaSession.setActionHandler('play', function() { 
-                    player.playVideo(); 
-                    bridge.play().catch(function(){});
-                });
-                navigator.mediaSession.setActionHandler('pause', function() { 
-                    player.pauseVideo(); 
-                    bridge.pause();
                 });
             }
         }
