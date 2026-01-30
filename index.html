@@ -15,9 +15,9 @@
         
         .glass-card {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 28px;
+            border-radius: 30px;
         }
 
         .auth-container {
@@ -35,8 +35,6 @@
             width: 400px;
             max-width: 90%;
             padding: 40px 30px;
-            transform: translateY(0);
-            transition: all 0.5s ease;
         }
 
         .input-field {
@@ -44,9 +42,9 @@
             padding: 14px 16px 14px 52px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
+            border-radius: 18px;
             outline: none;
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: 0.3s;
             color: white;
             font-size: 14px;
         }
@@ -60,13 +58,12 @@
         .btn-gradient {
             background: linear-gradient(45deg, var(--primary), var(--accent));
             transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(0, 210, 255, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 210, 255, 0.2);
         }
 
         .btn-gradient:hover {
             transform: translateY(-3px);
             filter: brightness(1.2);
-            box-shadow: 0 12px 25px rgba(0, 210, 255, 0.4);
         }
 
         .alert-toast {
@@ -74,7 +71,7 @@
             top: 30px;
             left: 50%;
             transform: translateX(-50%) translateY(-150px);
-            background: rgba(255, 255, 255, 0.95);
+            background: #fff;
             color: #000;
             padding: 14px 28px;
             border-radius: 50px;
@@ -82,7 +79,7 @@
             font-size: 13px;
             z-index: 1000;
             transition: 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
         }
         .alert-toast.active { transform: translateX(-50%) translateY(0); }
 
@@ -93,7 +90,6 @@
             border-radius: 24px;
             overflow: hidden;
             display: none;
-            box-shadow: 0 0 50px rgba(0,0,0,1);
         }
         
         #loader {
@@ -118,23 +114,22 @@
         .tab-btn.active::after {
             content: '';
             position: absolute;
-            bottom: -8px;
+            bottom: -10px;
             left: 50%;
             transform: translateX(-50%);
             width: 25px;
             height: 3px;
             background: var(--primary);
             border-radius: 10px;
-            box-shadow: 0 0 10px var(--primary);
         }
 
         .form-animate {
-            animation: slideIn 0.5s ease forwards;
+            animation: slideIn 0.5s ease-out forwards;
         }
 
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -145,7 +140,7 @@
     <div id="loader">
         <div class="flex flex-col items-center">
             <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-            <p class="mt-6 text-[10px] font-bold tracking-[0.5em] text-blue-400 animate-pulse">ĐANG XỬ LÝ</p>
+            <p class="mt-6 text-[10px] font-bold tracking-[0.5em] text-blue-400">ĐANG XỬ LÝ</p>
         </div>
     </div>
 
@@ -154,8 +149,8 @@
             <div class="text-center mb-10">
                 <h2 class="text-4xl font-black italic tracking-tighter mb-2">PREMIER <span class="text-red-600">PRO</span></h2>
                 <div class="flex justify-center gap-8 mt-8">
-                    <button id="tabLogin" onclick="switchTab('login')" class="tab-btn active text-[10px] font-bold uppercase tracking-[0.2em]">Đăng nhập</button>
-                    <button id="tabRegister" onclick="switchTab('register')" class="tab-btn text-[10px] font-bold uppercase tracking-[0.2em]">Đăng ký</button>
+                    <button id="tabLogin" onclick="switchTab('login')" class="tab-btn active text-[10px] font-bold uppercase tracking-widest">Đăng nhập</button>
+                    <button id="tabRegister" onclick="switchTab('register')" class="tab-btn text-[10px] font-bold uppercase tracking-widest">Đăng ký</button>
                 </div>
             </div>
             
@@ -168,7 +163,7 @@
                     <i class="fa-solid fa-lock absolute left-5 top-1/2 -translate-y-1/2 opacity-30 text-sm"></i>
                     <input type="password" id="loginPass" class="input-field" placeholder="Mật khẩu...">
                 </div>
-                <button onclick="handleEmailLogin()" class="w-full py-4 rounded-2xl font-bold btn-gradient text-[11px] uppercase tracking-widest mt-2">Đăng Nhập</button>
+                <button onclick="handleEmailLogin()" class="w-full py-4 rounded-2xl font-bold btn-gradient text-[11px] uppercase tracking-widest">Đăng nhập</button>
                 
                 <div class="flex items-center gap-4 py-4 opacity-20">
                     <hr class="flex-1 border-white/20"> <span class="text-[9px] font-bold">HOẶC</span> <hr class="flex-1 border-white/20">
@@ -193,7 +188,7 @@
                     <i class="fa-solid fa-lock absolute left-5 top-1/2 -translate-y-1/2 opacity-30 text-sm"></i>
                     <input type="password" id="regPass" class="input-field" placeholder="Mật khẩu tối thiểu 6 ký tự...">
                 </div>
-                <button onclick="handleEmailRegister()" class="w-full py-4 rounded-2xl font-bold btn-gradient text-[11px] uppercase tracking-widest mt-2">Tạo tài khoản</button>
+                <button onclick="handleEmailRegister()" class="w-full py-4 rounded-2xl font-bold btn-gradient text-[11px] uppercase tracking-widest">Tạo tài khoản</button>
             </div>
         </div>
     </div>
@@ -201,12 +196,12 @@
     <div id="mainContent" class="hidden opacity-0 p-6 max-w-2xl mx-auto min-h-screen">
         <div class="flex justify-between items-center mt-6 mb-12">
             <h1 class="text-3xl font-black italic">PREMIER <span class="text-red-600">PRO</span></h1>
-            <button onclick="handleLogout()" class="text-[9px] font-bold text-red-500 hover:text-red-400 uppercase tracking-[0.2em] transition">Đăng xuất</button>
+            <button onclick="handleLogout()" class="text-[9px] font-bold text-red-500 hover:text-red-400 uppercase tracking-widest transition">Đăng xuất</button>
         </div>
 
-        <div class="relative mb-10 group">
+        <div class="relative mb-10">
             <input type="text" id="ytUrl" placeholder="Dán link Video YouTube tại đây..." 
-                class="w-full bg-white/5 border border-white/10 p-6 rounded-3xl outline-none focus:border-red-600 transition-all duration-500 text-sm shadow-inner">
+                class="w-full bg-white/5 border border-white/10 p-6 rounded-3xl outline-none focus:border-red-600 transition-all duration-500 text-sm">
             <button onclick="playVideo()" class="absolute right-3 top-1/2 -translate-y-1/2 bg-red-600 p-4 rounded-2xl hover:scale-110 active:scale-95 transition-all shadow-lg shadow-red-600/30">
                 <i data-lucide="play" class="w-5 h-5 fill-white"></i>
             </button>
@@ -216,20 +211,20 @@
             <div id="ytPlayer"></div>
         </div>
 
-        <div class="glass-card p-6 flex items-center gap-5 mb-10 transition hover:bg-white/[0.05]">
-            <div id="userAvatar" class="w-16 h-16 rounded-[22px] bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center font-bold text-2xl overflow-hidden shadow-2xl">
-                <i class="fa-solid fa-user text-white/30"></i>
+        <div class="glass-card p-6 flex items-center gap-5 mb-10">
+            <div id="userAvatar" class="w-16 h-16 rounded-[22px] bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center font-bold text-2xl overflow-hidden shadow-xl text-white/30">
+                <i class="fa-solid fa-user"></i>
             </div>
             <div class="flex-1">
-                <p class="text-[9px] opacity-40 font-bold tracking-[0.3em] uppercase mb-1">Thành viên</p>
-                <h3 id="userName" class="font-bold text-lg text-white tracking-tight">Vui lòng đăng nhập</h3>
+                <p class="text-[9px] opacity-40 font-bold tracking-widest uppercase mb-1">Thành viên</p>
+                <h3 id="userName" class="font-bold text-lg text-white">Đang tải...</h3>
             </div>
-            <div class="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_15px_#22c55e]"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
         </div>
 
         <div class="grid grid-cols-2 gap-5">
-            <a href="https://zalo.me/0353564018" target="_blank" class="glass-card py-5 text-center text-[10px] font-bold hover:bg-blue-500/20 transition-all uppercase tracking-widest border-white/5">Zalo Support</a>
-            <a href="https://www.facebook.com/share/18EVigUwxz/" target="_blank" class="glass-card py-5 text-center text-[10px] font-bold hover:bg-blue-600/20 transition-all uppercase tracking-widest border-white/5">Facebook</a>
+            <a href="https://zalo.me/0353564018" target="_blank" class="glass-card py-5 text-center text-[10px] font-bold hover:bg-blue-500/10 transition uppercase tracking-widest">Zalo Support</a>
+            <a href="https://www.facebook.com/share/18EVigUwxz/" target="_blank" class="glass-card py-5 text-center text-[10px] font-bold hover:bg-blue-600/10 transition uppercase tracking-widest">Facebook</a>
         </div>
     </div>
 
@@ -264,30 +259,39 @@
             const name = document.getElementById('regName').value;
             const email = document.getElementById('regEmail').value;
             const pass = document.getElementById('regPass').value;
-            if(!name || !email || pass.length < 6) return showToast("Kiểm tra lại thông tin đăng ký!");
+            if(!name || !email || pass.length < 6) return showToast("Thông tin không hợp lệ!");
+            
             document.getElementById('loader').style.display = 'flex';
             try {
                 const res = await createUserWithEmailAndPassword(auth, email, pass);
                 await updateProfile(res.user, { displayName: name });
                 showToast("Đăng ký thành công!");
-            } catch (e) { showToast(e.message); }
+            } catch (e) { showToast("Lỗi: " + e.code); }
             finally { document.getElementById('loader').style.display = 'none'; }
         };
 
         window.handleEmailLogin = async () => {
             const email = document.getElementById('loginEmail').value;
             const pass = document.getElementById('loginPass').value;
-            if(!email || !pass) return showToast("Nhập email và mật khẩu!");
+            if(!email || !pass) return showToast("Vui lòng điền đủ thông tin!");
+
             document.getElementById('loader').style.display = 'flex';
             try { await signInWithEmailAndPassword(auth, email, pass); }
-            catch (e) { showToast("Sai thông tin tài khoản!"); }
+            catch (e) { showToast("Sai tài khoản hoặc mật khẩu!"); }
             finally { document.getElementById('loader').style.display = 'none'; }
         };
 
         window.loginGoogle = async () => {
             document.getElementById('loader').style.display = 'flex';
-            try { await signInWithPopup(auth, new GoogleAuthProvider()); }
-            catch (e) { showToast("Lỗi đăng nhập Google!"); }
+            const provider = new GoogleAuthProvider();
+            provider.setCustomParameters({ prompt: 'select_account' });
+            
+            try { await signInWithPopup(auth, provider); }
+            catch (e) { 
+                if(e.code === 'auth/popup-blocked') showToast("Hãy cho phép bật cửa sổ Popup!");
+                else if(e.code === 'auth/operation-not-allowed') showToast("Hãy bật Google Auth trong Firebase!");
+                else showToast("Lỗi Google: " + e.code);
+            }
             finally { document.getElementById('loader').style.display = 'none'; }
         };
 
