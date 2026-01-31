@@ -3,7 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PREMIER PRO | NGUYENTIEUDEV</title>
+    
+    <!-- SEO & Social Sharing (Ảnh khi gửi link/tìm kiếm Google) -->
+    <title>PREMIER PRO | NGUYENTIEUDEV - Web Online 24/7</title>
+    <meta name="description" content="Trải nghiệm xem video không quảng cáo, chạy nền, tắt màn hình vẫn nghe nhạc. Hệ thống Hosting 24/7 mạnh mẽ bởi NGUYENTIEUDEV.">
+    <meta name="keywords" content="Premier Pro, Nguyentieudev, Xem Youtube tat man hinh, Web 24/7, Hosting treo web">
+    
+    <!-- Open Graph / Facebook / Zalo / Messenger -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://premier-pro-nguyentieudev.web.app/">
+    <meta property="og:title" content="PREMIER PRO | NGUYENTIEUDEV">
+    <meta property="og:description" content="Hỗ trợ chạy nền, tắt màn hình và treo hosting 24/7. Trải nghiệm xem video đỉnh cao không quảng cáo.">
+    <!-- LINK ẢNH ĐẠI DIỆN KHI GỬI LINK (Thumbnail) -->
+    <meta property="og:image" content="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=1200&h=630&fit=crop">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="PREMIER PRO | NGUYENTIEUDEV">
+    <meta property="twitter:description" content="Web Online 24/7 - Chạy nền & Tắt màn hình.">
+    <meta property="twitter:image" content="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=1200&h=630&fit=crop">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -27,7 +46,9 @@
             align-items: center;
             justify-content: center;
             z-index: 100;
-            background: radial-gradient(circle at top right, #1e1b4b, #000);
+            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
             transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -58,7 +79,7 @@
         .btn-gradient {
             background: linear-gradient(45deg, var(--primary), var(--accent));
             transition: all 0.3s ease;
-            box-shadow: 0 10px 25px rgba(0, 210, 255, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 210, 255, 0.3);
         }
 
         .alert-toast {
@@ -126,7 +147,7 @@
             width: 280px;
             height: 100%;
             background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(25px);
             z-index: 500;
             transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             border-left: 1px solid rgba(255, 255, 255, 0.1);
@@ -149,7 +170,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
         }
         .modal-content {
             background: #111;
@@ -195,6 +216,15 @@
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
+        }
+
+        .hero-banner {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
     </style>
 </head>
@@ -275,7 +305,7 @@
                         <span class="text-[10px] font-bold opacity-50 uppercase tracking-widest">Hosting 24/7</span>
                         <div id="hostingToggle" onclick="toggleHosting()" class="toggle-switch"></div>
                     </div>
-                    <p class="text-[9px] opacity-40 leading-relaxed italic">Duy trì trạng thái web hoạt động liên tục ngay cả khi bạn không tương tác.</p>
+                    <p class="text-[9px] opacity-40 leading-relaxed italic">Duy trì trạng thái web hoạt động liên tục.</p>
                 </div>
             </div>
             <div class="pt-6 border-t border-white/10">
@@ -288,39 +318,23 @@
 
     <div id="guideModal" class="modal" onclick="closeModal('guide')">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <h2 class="text-2xl font-bold mb-4 text-blue-400 italic">HƯỚNG DẪN SỬ DỤNG</h2>
+            <h2 class="text-2xl font-bold mb-4 text-blue-400 italic uppercase">HƯỚNG DẪN</h2>
             <div class="text-sm opacity-80 space-y-4 leading-relaxed">
                 <div class="p-4 bg-white/5 rounded-2xl border border-white/10">
                     <h4 class="font-bold text-white mb-2 flex items-center gap-2"><i data-lucide="globe" class="w-4 h-4"></i> Web Online 24/7</h4>
-                    <p>Hệ thống được vận hành trên hạ tầng Cloud tốc độ cao, đảm bảo khả năng truy cập mọi lúc, mọi nơi không gián đoạn.</p>
+                    <p>Hệ thống vận hành liên tục 24/7 trên nền tảng Cloud Server cao cấp.</p>
                 </div>
                 <div class="p-4 bg-white/5 rounded-2xl border border-white/10">
                     <h4 class="font-bold text-white mb-2 flex items-center gap-2"><i data-lucide="layers" class="w-4 h-4"></i> Chạy nền & Tắt màn hình</h4>
-                    <p>Hỗ trợ công nghệ Background Playback. Bạn có thể thu nhỏ trình duyệt hoặc tắt màn hình điện thoại mà âm thanh video vẫn tiếp tục phát.</p>
-                </div>
-                <div class="p-4 bg-white/5 rounded-2xl border border-white/10">
-                    <h4 class="font-bold text-white mb-2 flex items-center gap-2"><i data-lucide="play-circle" class="w-4 h-4"></i> Cách xem video</h4>
-                    <p>Dán link YouTube (bao gồm cả Shorts) và nhấn Play. Premier Pro tự động loại bỏ quảng cáo và tối ưu hóa băng thông.</p>
+                    <p>Hỗ trợ nghe âm thanh ngay cả khi thu nhỏ ứng dụng hoặc tắt màn hình điện thoại.</p>
                 </div>
             </div>
             <button onclick="closeModal('guide')" class="mt-8 w-full py-4 btn-gradient rounded-2xl font-bold uppercase text-[11px] tracking-widest">Đã hiểu</button>
         </div>
     </div>
 
-    <div id="privacyModal" class="modal" onclick="closeModal('privacy')">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <h2 class="text-2xl font-bold mb-4 text-blue-400 italic">CHÍNH SÁCH BẢO MẬT</h2>
-            <div class="text-sm opacity-80 space-y-4">
-                <p>- Ứng dụng không thu thập dữ liệu duyệt web của người dùng.</p>
-                <p>- Thông tin định danh (Email/Tên) được bảo mật tuyệt đối qua Google Firebase.</p>
-                <p>- Không chia sẻ dữ liệu cho bên thứ ba vì bất kỳ mục đích nào.</p>
-            </div>
-            <button onclick="closeModal('privacy')" class="mt-8 w-full py-4 bg-white/10 rounded-2xl font-bold uppercase text-[11px]">Đóng</button>
-        </div>
-    </div>
-
     <div id="mainContent" class="hidden opacity-0 p-6 max-w-2xl mx-auto min-h-screen">
-        <div class="flex justify-between items-center mt-6 mb-12">
+        <div class="flex justify-between items-center mt-6 mb-8">
             <div>
                 <h1 class="text-3xl font-black italic">PREMIER <span class="text-red-600">PRO</span></h1>
                 <div id="hostingBadge" class="hosting-status bg-red-500/10 text-red-500 mt-2 hidden">
@@ -329,19 +343,21 @@
                 </div>
             </div>
             <button onclick="toggleMenu()" class="p-3 bg-white/5 rounded-2xl hover:bg-white/10 transition">
-                <i data-lucide="menu" class="w-6 h-6"></i>
+                <i data-lucide="menu" class="w-6 h-6 text-blue-400"></i>
             </button>
         </div>
 
+        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070&auto=format&fit=crop" class="hero-banner" alt="[Ảnh bìa công nghệ]">
+
         <div class="relative mb-10">
             <input type="text" id="ytUrl" placeholder="Dán link Video YouTube tại đây..." 
-                class="w-full bg-white/5 border border-white/10 p-6 rounded-3xl outline-none focus:border-blue-500 transition-all duration-500 text-sm">
-            <button onclick="initVideoPlayer()" class="absolute right-3 top-1/2 -translate-y-1/2 bg-blue-600 p-4 rounded-2xl hover:scale-110 active:scale-95 transition-all shadow-lg shadow-blue-600/30">
+                class="w-full bg-white/5 border border-white/10 p-6 rounded-3xl outline-none focus:border-blue-500 transition-all duration-500 text-sm shadow-inner">
+            <button onclick="initVideoPlayer()" class="absolute right-3 top-1/2 -translate-y-1/2 bg-blue-600 p-4 rounded-2xl hover:scale-110 active:scale-95 transition-all shadow-lg shadow-blue-600/40">
                 <i data-lucide="play" class="w-5 h-5 fill-white text-white"></i>
             </button>
         </div>
 
-        <div id="player-wrapper" class="mb-10 border border-white/10 shadow-2xl shadow-blue-500/10">
+        <div id="player-wrapper" class="mb-10 border border-white/10 shadow-2xl shadow-blue-500/10 bg-black">
             <div id="ytPlayer"></div>
         </div>
 
@@ -350,15 +366,19 @@
                 <i class="fa-solid fa-user"></i>
             </div>
             <div class="flex-1">
-                <p class="text-[9px] opacity-40 font-bold tracking-widest uppercase mb-1">Thành viên</p>
+                <p class="text-[9px] opacity-40 font-bold tracking-widest uppercase mb-1">Thành viên Premium</p>
                 <h3 id="userName" class="font-bold text-lg text-white">Đang tải...</h3>
             </div>
-            <div class="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_15px_#22c55e]"></div>
         </div>
 
         <div class="grid grid-cols-2 gap-5">
-            <a href="https://zalo.me/0353564018" target="_blank" class="glass-card py-5 text-center text-[10px] font-bold hover:bg-blue-500/10 transition uppercase tracking-widest">Zalo Support</a>
-            <a href="https://www.facebook.com/share/18EVigUwxz/" target="_blank" class="glass-card py-5 text-center text-[10px] font-bold hover:bg-blue-600/10 transition uppercase tracking-widest">Facebook</a>
+            <a href="https://zalo.me/0353564018" target="_blank" class="glass-card py-5 flex items-center justify-center gap-3 text-[10px] font-bold hover:bg-blue-500/10 transition uppercase tracking-widest">
+                <i class="fa-solid fa-comment-dots text-blue-400"></i> Zalo Support
+            </a>
+            <a href="https://www.facebook.com/share/18EVigUwxz/" target="_blank" class="glass-card py-5 flex items-center justify-center gap-3 text-[10px] font-bold hover:bg-blue-600/10 transition uppercase tracking-widest">
+                <i class="fa-brands fa-facebook-f text-blue-600"></i> Facebook
+            </a>
         </div>
     </div>
 
@@ -446,24 +466,14 @@
                 badge.classList.remove('hidden', 'bg-red-500/10', 'text-red-500');
                 badge.classList.add('bg-green-500/10', 'text-green-500');
                 badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> Hosting Online 24/7';
-                
-                try {
-                    if ('wakeLock' in navigator) {
-                        wakeLock = await navigator.wakeLock.request('screen');
-                    }
-                } catch (err) { console.log(err); }
-                
+                try { if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
                 showToast("Đã kích hoạt chế độ treo Hosting 24/7");
             } else {
                 btn.classList.remove('on');
                 badge.classList.remove('bg-green-500/10', 'text-green-500');
                 badge.classList.add('bg-red-500/10', 'text-red-500');
                 badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span> Hosting Offline';
-                
-                if (wakeLock !== null) {
-                    wakeLock.release();
-                    wakeLock = null;
-                }
+                if (wakeLock !== null) { wakeLock.release(); wakeLock = null; }
                 showToast("Đã tắt chế độ treo Hosting");
             }
         }
@@ -487,19 +497,12 @@
             const urlInput = document.getElementById('ytUrl').value;
             const videoID = extractVideoID(urlInput);
             if (!videoID) return showToast("Link không hợp lệ!");
-            
             document.getElementById('player-wrapper').style.display = 'block';
             if (player) player.destroy();
             document.getElementById('player-wrapper').innerHTML = '<div id="ytPlayer"></div>';
-            
             player = new YT.Player('ytPlayer', {
                 height: '100%', width: '100%', videoId: videoID,
-                playerVars: { 
-                    'autoplay': 1, 
-                    'rel': 0, 
-                    'playsinline': 1,
-                    'enablejsapi': 1 
-                },
+                playerVars: { 'autoplay': 1, 'rel': 0, 'playsinline': 1, 'enablejsapi': 1 },
                 events: { 'onReady': (e) => e.target.playVideo() }
             });
         }
