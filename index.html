@@ -12,130 +12,26 @@
     <style>
         :root { --primary: #00d2ff; --accent: #3a7bd5; }
         body { background-color: #050505; color: #fff; font-family: 'Quicksand', sans-serif; overflow-x: hidden; }
-        
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
-        }
-
-        .alert-toast {
-            position: fixed;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-150px);
-            background: #fff;
-            color: #000;
-            padding: 14px 28px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 13px;
-            z-index: 1000;
-            transition: 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-        }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 30px; }
+        .alert-toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-150px); background: #fff; color: #000; padding: 14px 28px; border-radius: 50px; font-weight: 700; font-size: 13px; z-index: 1000; transition: 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); box-shadow: 0 15px 40px rgba(0,0,0,0.5); }
         .alert-toast.active { transform: translateX(-50%) translateY(0); }
-
-        #player-wrapper {
-            width: 100%;
-            aspect-ratio: 16/9;
-            background: #000;
-            border-radius: 24px;
-            overflow: hidden;
-            display: none;
-            position: relative;
-        }
-        
-        .btn-gradient {
-            background: linear-gradient(45deg, var(--primary), var(--accent));
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 25px rgba(0, 210, 255, 0.2);
-        }
-
-        .side-menu {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 280px;
-            height: 100%;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(20px);
-            z-index: 500;
-            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            border-left: 1px solid rgba(255, 255, 255, 0.1);
-        }
+        #player-wrapper { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 24px; overflow: hidden; display: none; position: relative; }
+        .btn-gradient { background: linear-gradient(45deg, var(--primary), var(--accent)); transition: all 0.3s ease; box-shadow: 0 10px 25px rgba(0, 210, 255, 0.2); }
+        .side-menu { position: fixed; top: 0; right: -100%; width: 280px; height: 100%; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(20px); z-index: 500; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-left: 1px solid rgba(255, 255, 255, 0.1); }
         .side-menu.active { right: 0; }
-
-        .overlay-bg {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.6);
-            display: none;
-            z-index: 450;
-        }
-
-        .modal {
-            position: fixed;
-            inset: 0;
-            z-index: 600;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            background: rgba(0,0,0,0.8);
-        }
-        .modal-content {
-            background: #111;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            max-width: 500px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            padding: 30px;
-        }
-
-        .toggle-switch {
-            width: 50px;
-            height: 26px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50px;
-            position: relative;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .toggle-switch::before {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            top: 3px;
-            left: 3px;
-            transition: 0.3s;
-        }
+        .overlay-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 450; }
+        .modal { position: fixed; inset: 0; z-index: 600; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(0,0,0,0.8); }
+        .modal-content { background: #111; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto; padding: 30px; }
+        .toggle-switch { width: 50px; height: 26px; background: rgba(255, 255, 255, 0.1); border-radius: 50px; position: relative; cursor: pointer; transition: 0.3s; }
+        .toggle-switch::before { content: ''; position: absolute; width: 20px; height: 20px; background: white; border-radius: 50%; top: 3px; left: 3px; transition: 0.3s; }
         .toggle-switch.on { background: #22c55e; }
         .toggle-switch.on::before { left: 27px; }
-
-        .hosting-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 4px 12px;
-            border-radius: 50px;
-            font-size: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        .hosting-status { display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: 50px; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body onload="showMain()">
 
     <div id="toast" class="alert-toast">Thông báo!</div>
-
     <div id="menuOverlay" class="overlay-bg" onclick="toggleMenu()"></div>
     
     <div id="sideMenu" class="side-menu">
@@ -148,33 +44,14 @@
                 <button onclick="showModal('guide')" class="w-full flex items-center gap-4 text-sm font-medium opacity-70 hover:opacity-100 transition">
                     <i data-lucide="help-circle" class="w-5 h-5"></i> Hướng dẫn sử dụng
                 </button>
-                <button onclick="showModal('privacy')" class="w-full flex items-center gap-4 text-sm font-medium opacity-70 hover:opacity-100 transition">
-                    <i data-lucide="shield-check" class="w-5 h-5"></i> Chính sách bảo mật
-                </button>
-                
                 <div class="pt-6 border-t border-white/10">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-[10px] font-bold opacity-50 uppercase tracking-widest">Hosting 24/7</span>
                         <div id="hostingToggle" onclick="toggleHosting()" class="toggle-switch"></div>
                     </div>
-                    <p class="text-[9px] opacity-40 leading-relaxed italic">Duy trì trạng thái web hoạt động liên tục và ngăn thiết bị ngủ.</p>
+                    <p class="text-[9px] opacity-40 leading-relaxed italic">Web vẫn chạy kể cả khi bạn chuyển tab hoặc thu nhỏ trình duyệt.</p>
                 </div>
             </div>
-            <div class="pt-6 border-t border-white/10">
-                <p class="text-[10px] text-center opacity-30">PREMIER PRO v2.0</p>
-            </div>
-        </div>
-    </div>
-
-    <div id="guideModal" class="modal" onclick="closeModal('guide')">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <h2 class="text-2xl font-bold mb-4 text-blue-400 italic">HƯỚNG DẪN</h2>
-            <div class="text-sm opacity-80 space-y-4">
-                <p>1. Dán link YouTube vào ô nhập liệu.</p>
-                <p>2. Nhấn nút Play để bắt đầu xem.</p>
-                <p>3. Bật Hosting 24/7 để treo máy ổn định hơn.</p>
-            </div>
-            <button onclick="closeModal('guide')" class="mt-8 w-full py-4 btn-gradient rounded-2xl font-bold uppercase text-[11px]">Đã hiểu</button>
         </div>
     </div>
 
@@ -214,29 +91,32 @@
             </div>
             <div class="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]"></div>
         </div>
-
-        <div class="grid grid-cols-2 gap-5">
-            <a href="https://zalo.me/0353564018" target="_blank" class="glass-card py-5 text-center text-[10px] font-bold hover:bg-blue-500/10 transition uppercase tracking-widest">Zalo Support</a>
-            <a href="https://www.facebook.com/share/18EVigUwxz/" target="_blank" class="glass-card py-5 text-center text-[10px] font-bold hover:bg-blue-600/10 transition uppercase tracking-widest">Facebook</a>
-        </div>
     </div>
 
     <script>
         var player = null;
         var wakeLock = null;
         var hostingActive = false;
+        var backgroundWorker = null;
 
         function showMain() {
             document.getElementById('mainContent').classList.remove('hidden');
             setTimeout(() => document.getElementById('mainContent').style.opacity = '1', 100);
             lucide.createIcons();
+            setupBackgroundPersistence();
         }
 
-        function toggleMenu() {
-            const menu = document.getElementById('sideMenu');
-            const overlay = document.getElementById('menuOverlay');
-            const isActive = menu.classList.toggle('active');
-            overlay.style.display = isActive ? 'block' : 'none';
+        function setupBackgroundPersistence() {
+            const blob = new Blob([`
+                setInterval(() => { self.postMessage('tick'); }, 1000);
+            `], { type: 'text/javascript' });
+            backgroundWorker = new Worker(URL.createObjectURL(blob));
+            
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden && hostingActive && player) {
+                    player.playVideo();
+                }
+            });
         }
 
         async function toggleHosting() {
@@ -256,7 +136,7 @@
                     }
                 } catch (err) {}
                 
-                showToast("Đã kích hoạt chế độ treo Hosting 24/7");
+                showToast("Đã kích hoạt chế độ chạy ngầm");
             } else {
                 btn.classList.remove('on');
                 badge.classList.replace('bg-green-500/10', 'bg-red-500/10');
@@ -267,17 +147,15 @@
                     wakeLock.release();
                     wakeLock = null;
                 }
-                showToast("Đã tắt chế độ treo Hosting");
+                showToast("Đã tắt chế độ chạy ngầm");
             }
         }
 
-        function showModal(id) {
-            toggleMenu();
-            document.getElementById(id + 'Modal').style.display = 'flex';
-        }
-
-        function closeModal(id) {
-            document.getElementById(id + 'Modal').style.display = 'none';
+        function toggleMenu() {
+            const menu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('menuOverlay');
+            const isActive = menu.classList.toggle('active');
+            overlay.style.display = isActive ? 'block' : 'none';
         }
 
         function extractVideoID(url) {
@@ -297,8 +175,20 @@
             
             player = new YT.Player('ytPlayer', {
                 height: '100%', width: '100%', videoId: videoID,
-                playerVars: { 'autoplay': 1, 'rel': 0, 'playsinline': 1 },
-                events: { 'onReady': (e) => e.target.playVideo() }
+                playerVars: { 
+                    'autoplay': 1, 
+                    'rel': 0, 
+                    'playsinline': 1,
+                    'enablejsapi': 1 
+                },
+                events: { 
+                    'onReady': (e) => e.target.playVideo(),
+                    'onStateChange': (e) => {
+                        if (e.data === YT.PlayerState.PAUSED && hostingActive) {
+                            player.playVideo();
+                        }
+                    }
+                }
             });
         }
 
