@@ -9,83 +9,84 @@
         :root { --neon: #00E6FF; --bg: #050505; }
         body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
         .card { background: rgba(10,10,10,0.95); border: 2px solid var(--neon); padding: 40px 30px; border-radius: 25px; text-align: center; box-shadow: 0 0 30px rgba(0,230,255,0.3); width: 90%; max-width: 420px; position: relative; }
-        .card::before { content: ""; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; border-radius: 25px; background: linear-gradient(45deg, var(--neon), transparent, var(--neon)); z-index: -1; opacity: 0.3; }
         h2 { color: var(--neon); text-shadow: 0 0 10px var(--neon); letter-spacing: 2px; margin-bottom: 5px; }
         .status { font-size: 13px; color: #888; margin-bottom: 25px; }
         .loader { border: 4px solid #111; border-top: 4px solid var(--neon); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; display: none; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .btn { background: var(--neon); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; font-size: 15px; text-transform: uppercase; margin-top: 10px; }
+        .btn { background: var(--neon); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; font-size: 15px; text-transform: uppercase; margin-top: 10px; text-decoration: none; display: block; }
         .btn:hover { transform: scale(1.02); box-shadow: 0 0 15px var(--neon); }
         .key-box { display: none; margin-top: 10px; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .key-display { font-size: 19px; color: #FFEB3B; font-weight: bold; background: #1a1a1a; padding: 18px; border-radius: 12px; border: 1px solid rgba(255,235,59,0.3); display: block; margin: 15px 0; word-break: break-all; letter-spacing: 1px; }
-        .copy-btn { background: #333; color: white; border: 1px solid #444; }
     </style>
 </head>
 <body>
     <div class="card">
         <h2>SIFEXPING PRO</h2>
-        <div id="status-text" class="status">Hệ thống xác thực thiết bị</div>
+        <div id="status-text" class="status">Hệ thống xác thực tự động</div>
         <div class="loader" id="loader"></div>
 
         <div id="step-start">
-            <p style="font-size: 14px; line-height: 1.6; color: #ccc;">Vui lòng vượt link để hệ thống tự động cập nhật Key mới vào máy chủ GitHub.</p>
-            <button class="btn" onclick="startFlow()">BẮT ĐẦU LẤY KEY</button>
+            <p style="font-size: 14px; line-height: 1.6; color: #ccc; margin-bottom: 20px;">Vui lòng vượt link để hệ thống tự động cập nhật Key mới vào máy chủ GitHub.</p>
+            <button class="btn" onclick="generateShortLink()">BẮT ĐẦU LẤY KEY</button>
         </div>
 
         <div id="step-result" class="key-box">
             <p style="color: #4CAF50; font-weight: bold; margin-bottom: 5px;">THÀNH CÔNG!</p>
-            <p style="font-size: 12px; color: #888;">Key đã được đồng bộ lên GitHub</p>
-            <span class="key-display" id="final-key">ĐANG TẠO...</span>
+            <p style="font-size: 12px; color: #888;">Dữ liệu đã được ghi đè lên GitHub</p>
+            <span class="key-display" id="final-key">...</span>
             <button class="btn" onclick="copyKey()">SAO CHÉP MÃ KEY</button>
-            <p style="font-size: 11px; color: #555; margin-top: 15px;">Lưu ý: Key chỉ có tác dụng trong 24h</p>
+            <p style="font-size: 11px; color: #555; margin-top: 15px;">Key có hiệu lực trong 24h trên thiết bị này.</p>
         </div>
     </div>
 
     <script>
-        // --- CẤU HÌNH TỰ ĐỘNG ---
+        // --- CẤU HÌNH HỆ THỐNG ---
         const GITHUB_USER = "nguyentieu08";
         const GITHUB_REPO = "SifexPing_Key";
         const GITHUB_FILE = "keys.txt";
-        // Token bạn cung cấp đã được đưa vào đây
         const GITHUB_TOKEN = "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";
-        // Bạn hãy dán Link4M Token của bạn vào đây
-        const LINK4M_API = "https://link4m.co/api-shorten/v2?api=6535cd3e87fc4d228f7e0fb1&url=yourdestinationlink.com"; 
+        const LINK4M_API = "6535cd3e87fc4d228f7e0fb1"; 
 
         const params = new URLSearchParams(window.location.search);
-        const deviceId = params.get('device') || "DEVICE_UNIDENTIFIED";
+        const deviceId = params.get('device') || "DEVICE_ERROR";
         const isDone = params.get('done') === 'true';
 
+        // Nếu đã vượt link xong (callback trả về)
         if (isDone) {
             document.getElementById('step-start').style.display = 'none';
-            document.getElementById('status-text').innerText = "Đang ghi đè dữ liệu lên GitHub...";
+            document.getElementById('status-text').innerText = "Đang xử lý dữ liệu GitHub...";
             document.getElementById('loader').style.display = 'block';
-            autoWriteGithub();
+            processKeyUpdate();
         }
 
-        function startFlow() {
+        function generateShortLink() {
+            if(deviceId === "DEVICE_ERROR") {
+                alert("Lỗi: Không tìm thấy Device ID. Vui lòng mở từ App!");
+                return;
+            }
             const currentUrl = window.location.href.split('?')[0];
-            const callback = `${currentUrl}?device=${deviceId}&done=true`;
-            // Chuyển hướng đến Link4M
-            window.location.href = `https://link4m.com/api-shorten/v2?api=${LINK4M_API}&url=${encodeURIComponent(callback)}`;
+            const callbackUrl = `${currentUrl}?device=${deviceId}&done=true`;
+            // Chuyển hướng qua API Link4M để rút gọn link
+            window.location.href = `https://link4m.co/api-shorten/v2?api=${LINK4M_API}&url=${encodeURIComponent(callbackUrl)}`;
         }
 
-        async function autoWriteGithub() {
+        async function processKeyUpdate() {
             try {
-                // 1. Tạo một Token bí mật ngẫu nhiên mới hoàn toàn
-                const randomSecret = "SX-" + Math.random().toString(36).substring(2, 12).toUpperCase();
+                // 1. Tạo Secret mới ngẫu nhiên (Đây sẽ là nội dung file keys.txt)
+                const newSecret = "SFX-" + Math.random().toString(36).substring(2, 12).toUpperCase();
                 
-                // 2. Lấy thông tin file hiện tại từ GitHub (cần SHA để cập nhật)
+                // 2. Lấy SHA của file hiện tại từ GitHub
                 const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`;
                 const getRes = await fetch(apiUrl, {
                     headers: { "Authorization": `token ${GITHUB_TOKEN}` }
                 });
                 
-                if (!getRes.ok) throw new Error("Không thể kết nối GitHub API");
+                if (!getRes.ok) throw new Error("GitHub API Error: " + getRes.status);
                 const fileData = await getRes.json();
                 const currentSha = fileData.sha;
 
-                // 3. Gửi lệnh ghi đè (PUT) lên GitHub
+                // 3. Thực hiện ghi đè nội dung mới lên GitHub
                 const updateRes = await fetch(apiUrl, {
                     method: "PUT",
                     headers: { 
@@ -93,43 +94,42 @@
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        message: `System: Auto update key for device ${deviceId}`,
-                        content: btoa(randomSecret), // Chuyển chuỗi sang Base64
+                        message: `AutoUpdate: Device ${deviceId}`,
+                        content: btoa(newSecret), // Encode Base64 cho GitHub
                         sha: currentSha
                     })
                 });
 
                 if (updateRes.ok) {
-                    // 4. Tính toán Key hiển thị dựa trên Secret mới vừa ghi
+                    // 4. Tính toán Key hiển thị cho người dùng (Giống công thức trong App)
                     const today = new Date().toISOString().slice(0, 10);
-                    const rawData = deviceId + randomSecret + today;
-                    const hash = CryptoJS.SHA256(rawData).toString().toUpperCase();
+                    const raw = deviceId + newSecret + today;
+                    const hash = CryptoJS.SHA256(raw).toString().toUpperCase();
                     const finalKey = `Sifex-Ping-${hash.substring(0, 4)}-${hash.substring(4, 8)}`;
                     
-                    // Hiển thị kết quả
+                    // Hiển thị giao diện hoàn tất
                     document.getElementById('loader').style.display = 'none';
                     document.getElementById('status-text').style.display = 'none';
                     document.getElementById('step-result').style.display = 'block';
                     document.getElementById('final-key').innerText = finalKey;
                 } else {
-                    throw new Error("Lỗi cập nhật dữ liệu máy chủ");
+                    throw new Error("Không thể cập nhật máy chủ GitHub.");
                 }
             } catch (err) {
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('status-text').innerHTML = `<span style="color:red">LỖI: ${err.message}</span>`;
-                console.error(err);
             }
         }
 
         function copyKey() {
-            const key = document.getElementById('final-key').innerText;
-            const tempInput = document.createElement("input");
-            document.body.appendChild(tempInput);
-            tempInput.value = key;
-            tempInput.select();
-            document.execCommand("copy");
-            document.body.removeChild(tempInput);
-            alert("Đã sao chép Key vào bộ nhớ tạm!");
+            const keyText = document.getElementById('final-key').innerText;
+            const el = document.createElement('textarea');
+            el.value = keyText;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            alert("Đã sao chép Key!");
         }
     </script>
 </body>
