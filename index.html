@@ -2,525 +2,429 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NizeWeak</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>YouTube No Ads - Tìm kiếm & Xem không quảng cáo</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
-            background: #0a0a0f;
-            color: #00ff88;
-            font-family: 'Share Tech Mono', monospace;
-            min-height: 100vh;
-            overflow-x: hidden;
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #0f0f0f;
+            color: #fff;
+            padding: 20px;
         }
-
-        /* Animated background */
-        .bg-grid {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            z-index: 0;
-            animation: gridMove 8s linear infinite;
-        }
-
-        @keyframes gridMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(50px, 50px); }
-        }
-
-        .scanline {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(0,255,136,0.01) 2px,
-                rgba(0,255,136,0.01) 4px
-            );
-            z-index: 1;
-            pointer-events: none;
-        }
-
         .container {
-            position: relative;
-            z-index: 2;
-            max-width: 700px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 30px 20px;
         }
-
-        /* Header */
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .header h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3em;
-            font-weight: 900;
-            background: linear-gradient(135deg, #00ff88, #00ccff, #00ff88);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(0,255,136,0.3);
-            animation: glow 3s ease-in-out infinite;
-            letter-spacing: 5px;
-        }
-
-        @keyframes glow {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .header .subtitle {
-            font-size: 0.85em;
-            color: #00ccff;
-            margin-top: 8px;
-            letter-spacing: 3px;
-            opacity: 0.7;
-        }
-
-        .header .line {
-            width: 80%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #00ff88, transparent);
-            margin: 15px auto 0;
-        }
-
-        /* Input Section */
-        .input-section {
-            background: rgba(0,255,136,0.03);
-            border: 1px solid rgba(0,255,136,0.15);
-            border-radius: 8px;
-            padding: 25px;
+        header {
             margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
         }
-
-        .input-section::before {
-            content: '> SYSTEM.INPUT';
-            position: absolute;
-            top: 8px;
-            right: 12px;
-            font-size: 0.65em;
-            color: rgba(0,255,136,0.3);
-            letter-spacing: 2px;
-        }
-
-        .input-section label {
-            display: block;
-            font-size: 0.85em;
-            color: #00ccff;
-            margin-bottom: 10px;
-            letter-spacing: 2px;
-        }
-
-        .input-group {
+        h1 {
+            font-size: 1.8rem;
+            color: #ff0000;
+            margin-bottom: 20px;
             display: flex;
+            align-items: center;
             gap: 10px;
         }
-
-        .input-group input {
-            flex: 1;
-            background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(0,255,136,0.3);
-            border-radius: 5px;
-            padding: 14px 18px;
-            color: #00ff88;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 1.1em;
-            outline: none;
-            transition: all 0.3s;
-        }
-
-        .input-group input::placeholder {
-            color: rgba(0,255,136,0.25);
-        }
-
-        .input-group input:focus {
-            border-color: #00ff88;
-            box-shadow: 0 0 15px rgba(0,255,136,0.15), inset 0 0 15px rgba(0,255,136,0.05);
-        }
-
-        .btn-tra {
-            background: linear-gradient(135deg, #00ff88, #00cc6a);
-            color: #0a0a0f;
-            border: none;
-            border-radius: 5px;
-            padding: 14px 30px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            font-size: 0.95em;
-            cursor: pointer;
-            letter-spacing: 2px;
-            transition: all 0.3s;
-            text-transform: uppercase;
-        }
-
-        .btn-tra:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 25px rgba(0,255,136,0.4);
-        }
-
-        .btn-tra:active {
-            transform: translateY(0);
-        }
-
-        .btn-tra:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        /* Loading */
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 30px;
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
             margin-bottom: 20px;
         }
-
-        .loading.active {
-            display: block;
+        .search-bar input {
+            flex: 1;
+            padding: 14px 20px;
+            background: #121212;
+            border: 1px solid #333;
+            border-radius: 40px;
+            color: white;
+            font-size: 16px;
+            outline: none;
         }
-
-        .loading .spinner {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(0,255,136,0.15);
-            border-top-color: #00ff88;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+        .search-bar input:focus {
+            border-color: #ff0000;
         }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .search-bar button {
+            background: #ff0000;
+            border: none;
+            padding: 0 28px;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
         }
-
-        .loading p {
-            margin-top: 12px;
-            font-size: 0.85em;
-            color: #00ccff;
-            animation: blink 1s infinite;
+        .search-bar button:hover {
+            background: #cc0000;
         }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
         }
-
-        /* Result Section */
-        .result-section {
+        .filter-btn {
+            background: #272727;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        .filter-btn.active {
+            background: #ff0000;
+        }
+        .player-section {
+            margin-bottom: 30px;
             display: none;
-            background: rgba(0,255,136,0.03);
-            border: 1px solid rgba(0,255,136,0.15);
-            border-radius: 8px;
-            overflow: hidden;
-            animation: fadeIn 0.5s ease;
         }
-
-        .result-section.active {
+        .player-section.active {
             display: block;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .player-container {
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
         }
-
-        .result-header {
-            background: linear-gradient(135deg, rgba(0,255,136,0.1), rgba(0,204,255,0.1));
-            padding: 15px 25px;
-            border-bottom: 1px solid rgba(0,255,136,0.15);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .player-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
         }
-
-        .result-header h2 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1em;
-            color: #00ff88;
-            letter-spacing: 3px;
+        .close-player {
+            background: #272727;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            color: white;
+            margin-top: 12px;
+            cursor: pointer;
+            font-size: 14px;
         }
-
-        .result-header .status {
-            font-size: 0.75em;
-            color: #00ccff;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
         }
-
-        .result-header .status .dot {
-            width: 6px;
-            height: 6px;
-            background: #00ff88;
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
+        .video-card {
+            background: #181818;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
         }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+        .video-card:hover {
+            transform: scale(1.02);
+            background: #202020;
         }
-
-        .result-body {
-            padding: 20px 25px;
+        .thumbnail {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #2c2c2c;
         }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(0,255,136,0.06);
-            transition: background 0.2s;
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
-
-        .info-row:hover {
-            background: rgba(0,255,136,0.03);
-            padding-left: 8px;
-            padding-right: 8px;
-            margin-left: -8px;
-            margin-right: -8px;
+        .duration {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(0,0,0,0.8);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
         }
-
-        .info-row:last-child {
-            border-bottom: none;
+        .video-info {
+            padding: 12px;
         }
-
-        .info-row .label {
-            font-size: 0.85em;
-            color: #00ccff;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .video-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
-
-        .info-row .label .icon {
-            width: 18px;
+        .video-channel {
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 4px;
+        }
+        .video-stats {
+            font-size: 12px;
+            color: #aaa;
+        }
+        .loading {
             text-align: center;
-            opacity: 0.7;
+            padding: 40px;
+            color: #aaa;
         }
-
-        .info-row .value {
-            font-size: 0.95em;
-            color: #00ff88;
-            text-align: right;
-            word-break: break-all;
-        }
-
-        .info-row .value.highlight {
-            color: #ffcc00;
-            text-shadow: 0 0 8px rgba(255,204,0,0.3);
-        }
-
-        .info-row .value.rank {
-            color: #ff6b6b;
-            text-shadow: 0 0 8px rgba(255,107,107,0.3);
-        }
-
-        /* Footer */
-        .footer {
+        .no-results {
             text-align: center;
-            margin-top: 40px;
-            font-size: 0.7em;
-            color: rgba(0,255,136,0.25);
-            letter-spacing: 2px;
+            padding: 40px;
+            color: #aaa;
         }
-
-        /* Particles */
-        .particle {
-            position: fixed;
-            width: 2px;
-            height: 2px;
-            background: #00ff88;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0;
-            animation: float 6s infinite;
+        .feature-badge {
+            display: inline-block;
+            background: #2c2c2c;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-right: 10px;
         }
-
-        @keyframes float {
-            0% { opacity: 0; transform: translateY(100vh); }
-            10% { opacity: 0.6; }
-            90% { opacity: 0.6; }
-            100% { opacity: 0; transform: translateY(-10vh); }
-        }
-
-        /* Responsive */
-        @media (max-width: 500px) {
-            .header h1 { font-size: 2em; }
-            .input-group { flex-direction: column; }
-            .btn-tra { width: 100%; }
-            .info-row { flex-direction: column; align-items: flex-start; gap: 4px; }
-            .info-row .value { text-align: left; }
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            .results-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 1.4rem; }
         }
     </style>
 </head>
 <body>
-
-    <div class="bg-grid"></div>
-    <div class="scanline"></div>
-
-    <div class="container">
-        <div class="header">
-            <h1>NizeWeak</h1>
-            <div class="subtitle">FREE FIRE UID LOOKUP SYSTEM</div>
-            <div class="line"></div>
+<div class="container">
+    <header>
+        <h1>🎬 YouTube No Ads</h1>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Tìm kiếm video... (ví dụ: nhạc chill, game, hài)" autocomplete="off">
+            <button id="searchBtn">🔍 Tìm kiếm</button>
         </div>
-
-        <div class="input-section">
-            <label>// NHẬP UID FREE FIRE</label>
-            <div class="input-group">
-                <input type="text" id="uidInput" placeholder="Dán UID tại đây..." maxlength="20" autocomplete="off">
-                <button class="btn-tra" id="btnTra" onclick="traCuu()">TRA</button>
-            </div>
+        <div class="filter-bar">
+            <button class="filter-btn active" data-type="video">📹 Video</button>
+            <button class="filter-btn" data-type="playlist">📋 Playlist</button>
+            <button class="filter-btn" data-type="channel">📺 Kênh</button>
         </div>
-
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>> ĐANG TRUY VẤN DỮ LIỆU...</p>
+        <div class="info">
+            <span class="feature-badge">🚫 Không quảng cáo</span>
+            <span class="feature-badge">📱 Xem nền (tắt màn hình vẫn nghe)</span>
+            <span class="feature-badge">🔄 Lặp lại tự động</span>
         </div>
+    </header>
 
-        <div class="result-section" id="resultSection">
-            <div class="result-header">
-                <h2>KẾT QUẢ</h2>
-                <div class="status"><div class="dot"></div> ONLINE</div>
-            </div>
-            <div class="result-body" id="resultBody">
-                <!-- Data will be injected here -->
-            </div>
+    <!-- Player -->
+    <div class="player-section" id="playerSection">
+        <div class="player-container">
+            <iframe id="youtubePlayer" 
+                    src="about:blank"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen>
+            </iframe>
         </div>
-
-        <div class="footer">
-            NIZEWEAK SYSTEM v2.0 &bull; FOR EDUCATIONAL PURPOSES ONLY
-        </div>
+        <button class="close-player" id="closePlayer">✖ Đóng video</button>
     </div>
 
-    <!-- Floating particles -->
-    <div class="particle" style="left:10%; animation-delay:0s; animation-duration:7s;"></div>
-    <div class="particle" style="left:25%; animation-delay:1.5s; animation-duration:5.5s;"></div>
-    <div class="particle" style="left:45%; animation-delay:3s; animation-duration:8s;"></div>
-    <div class="particle" style="left:65%; animation-delay:0.5s; animation-duration:6s;"></div>
-    <div class="particle" style="left:80%; animation-delay:2s; animation-duration:7.5s;"></div>
-    <div class="particle" style="left:92%; animation-delay:4s; animation-duration:5s;"></div>
+    <!-- Kết quả tìm kiếm -->
+    <div id="resultsContainer">
+        <div class="loading">🔍 Nhập từ khóa để tìm kiếm video...</div>
+    </div>
+</div>
 
-    <script>
-        // Random data generator
-        function randInt(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
+<script>
+    // ========== CẤU HÌNH ==========
+    // Dùng API không cần key thông qua invidious (proxy)
+    const INVIOUS_INSTANCE = "https://invidious.io.lol";
+    let currentSearchType = "video";
+    
+    // DOM elements
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const playerSection = document.getElementById('playerSection');
+    const youtubePlayer = document.getElementById('youtubePlayer');
+    const closePlayer = document.getElementById('closePlayer');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+
+    // ========== HÀM GỌI API TÌM KIẾM ==========
+    async function searchYouTube(query, type = 'video') {
+        if (!query) return [];
+        
+        let typeParam = 'video';
+        if (type === 'playlist') typeParam = 'playlist';
+        if (type === 'channel') typeParam = 'channel';
+        
+        const url = `${INVIOUS_INSTANCE}/api/v1/search?q=${encodeURIComponent(query)}&type=${typeParam}&sort=relevance`;
+        
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('API error');
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Lỗi tìm kiếm:', error);
+            return [];
+        }
+    }
+
+    // ========== HIỂN THỊ KẾT QUẢ ==========
+    function displayResults(results, type) {
+        if (!results || results.length === 0) {
+            resultsContainer.innerHTML = '<div class="no-results">😞 Không tìm thấy kết quả. Hãy thử từ khóa khác.</div>';
+            return;
         }
 
-        function randDate(startYear, endYear) {
-            const start = new Date(startYear, 0, 1).getTime();
-            const end = new Date(endYear, 11, 31).getTime();
-            const d = new Date(start + Math.random() * (end - start));
-            return d.toLocaleDateString('vi-VN');
-        }
-
-        const rankList = ['Đồng IV','Đồng III','Đồng II','Đồng I','Bạc IV','Bạc III','Bạc II','Bạc I','Vàng IV','Vàng III','Vàng II','Vàng I','Bạch Kim IV','Bạch Kim III','Bạch Kim II','Bạch Kim I','Kim Cương IV','Kim Cương III','Kim Cương II','Kim Cương I','Anh Hùng','Huyền Thoại','Đại Nguyên Soái'];
-        const nameList = ['ShadowHunter','NightWolf','DragonSlayer','PhantomX','BlazeKing','StormRider','IronFist','DarkViper','ThunderBolt','FrostBite','GhostRecon','AlphaStrike','NovaStar','CyberNinja','RogueAgent'];
-        const emailDomains = ['gmail.com','yahoo.com','outlook.com','hotmail.com'];
-
-        function generateData(uid) {
-            const name = nameList[randInt(0, nameList.length - 1)] + randInt(10, 999);
-            const email = name.toLowerCase() + randInt(1,99) + '@' + emailDomains[randInt(0, emailDomains.length - 1)];
-            const verifyCode = Array.from({length: 6}, () => randInt(0,9)).join('');
-
-            return {
-                tenTaiKhoan: name,
-                level: randInt(1, 85),
-                luotThich: randInt(50, 50000).toLocaleString('vi-VN'),
-                mucRank: rankList[randInt(0, rankList.length - 1)],
-                br: randInt(500, 8000),
-                cs: randInt(500, 8000),
-                ngayTao: randDate(2018, 2024),
-                dangNhapCuoi: randDate(2025, 2026),
-                kimCuong: randInt(0, 150000).toLocaleString('vi-VN'),
-                emailXacThuc: email,
-                maXacThuc: verifyCode
-            };
-        }
-
-        function traCuu() {
-            const uid = document.getElementById('uidInput').value.trim();
-            const btn = document.getElementById('btnTra');
-            const loading = document.getElementById('loading');
-            const result = document.getElementById('resultSection');
-
-            if (!uid) {
-                document.getElementById('uidInput').style.borderColor = '#ff4444';
-                setTimeout(() => {
-                    document.getElementById('uidInput').style.borderColor = 'rgba(0,255,136,0.3)';
-                }, 1500);
-                return;
-            }
-
-            btn.disabled = true;
-            loading.classList.add('active');
-            result.classList.remove('active');
-
-            const delay = randInt(1500, 3000);
-
-            setTimeout(() => {
-                const data = generateData(uid);
-
-                const rows = [
-                    { icon: '👤', label: 'Tên Tài Khoản', value: data.tenTaiKhoan, cls: '' },
-                    { icon: '⭐', label: 'Level', value: data.level, cls: 'highlight' },
-                    { icon: '❤️', label: 'Lượt Thích', value: data.luotThich, cls: '' },
-                    { icon: '🏆', label: 'Mức Rank', value: data.mucRank, cls: 'rank' },
-                    { icon: '🎯', label: 'BR', value: data.br.toLocaleString('vi-VN'), cls: '' },
-                    { icon: '⚔️', label: 'CS', value: data.cs.toLocaleString('vi-VN'), cls: '' },
-                    { icon: '📅', label: 'Ngày Tạo Tài Khoản', value: data.ngayTao, cls: '' },
-                    { icon: '🕐', label: 'Đăng Nhập Lần Cuối', value: data.dangNhapCuoi, cls: '' },
-                    { icon: '💎', label: 'Tổng Nạp Kim Cương', value: data.kimCuong, cls: 'highlight' },
-                    { icon: '📧', label: 'Email Xác Thực', value: data.emailXacThuc, cls: '' },
-                    { icon: '🔐', label: 'Mã Email Xác Thực', value: data.maXacThuc, cls: 'rank' }
-                ];
-
-                let html = '';
-                rows.forEach(row => {
-                    html += `
-                        <div class="info-row">
-                            <div class="label"><span class="icon">${row.icon}</span> ${row.label}</div>
-                            <div class="value ${row.cls}">${row.value}</div>
+        let html = '<div class="results-grid">';
+        
+        for (const item of results) {
+            if (type === 'video' && item.type === 'video') {
+                const title = item.title || 'Không tiêu đề';
+                const author = item.author || 'Unknown';
+                const views = item.viewCount ? `${formatNumber(item.viewCount)} lượt xem` : '';
+                const duration = item.lengthSeconds ? formatDuration(item.lengthSeconds) : '';
+                const thumbnail = item.videoThumbnails?.[0]?.url || item.thumbnailUrl || '';
+                
+                html += `
+                    <div class="video-card" data-video-id="${item.videoId}" data-type="video">
+                        <div class="thumbnail">
+                            <img src="${thumbnail}" alt="thumbnail" loading="lazy">
+                            ${duration ? `<span class="duration">${duration}</span>` : ''}
                         </div>
-                    `;
-                });
-
-                document.getElementById('resultBody').innerHTML = html;
-                loading.classList.remove('active');
-                result.classList.add('active');
-                btn.disabled = false;
-            }, delay);
+                        <div class="video-info">
+                            <div class="video-title">${escapeHtml(title)}</div>
+                            <div class="video-channel">${escapeHtml(author)}</div>
+                            <div class="video-stats">${views}</div>
+                        </div>
+                    </div>
+                `;
+            } 
+            else if (type === 'playlist' && item.type === 'playlist') {
+                const title = item.title || 'Playlist không tên';
+                const author = item.author || 'Unknown';
+                const videoCount = item.videoCount ? `${item.videoCount} video` : '';
+                const thumbnail = item.playlistThumbnail || '';
+                
+                html += `
+                    <div class="video-card" data-playlist-id="${item.playlistId}" data-type="playlist">
+                        <div class="thumbnail">
+                            <img src="${thumbnail}" alt="thumbnail" loading="lazy">
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">📋 ${escapeHtml(title)}</div>
+                            <div class="video-channel">${escapeHtml(author)}</div>
+                            <div class="video-stats">${videoCount}</div>
+                        </div>
+                    </div>
+                `;
+            }
+            else if (type === 'channel' && item.type === 'channel') {
+                const name = item.author || 'Kênh không tên';
+                const subscribers = item.subCount ? `${formatNumber(item.subCount)} subscribers` : '';
+                const thumbnail = item.authorThumbnails?.[0]?.url || '';
+                
+                html += `
+                    <div class="video-card" data-channel-id="${item.authorId}" data-type="channel">
+                        <div class="thumbnail">
+                            <img src="${thumbnail}" alt="avatar" loading="lazy" style="border-radius: 50%; width: 80px; margin: 20px auto; display: block;">
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">📺 ${escapeHtml(name)}</div>
+                            <div class="video-stats">${subscribers}</div>
+                        </div>
+                    </div>
+                `;
+            }
         }
-
-        // Enter key support
-        document.getElementById('uidInput').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') traCuu();
+        
+        html += '</div>';
+        resultsContainer.innerHTML = html;
+        
+        // Gắn sự kiện click cho video cards
+        document.querySelectorAll('.video-card[data-video-id]').forEach(card => {
+            card.addEventListener('click', () => {
+                const videoId = card.dataset.videoId;
+                playVideo(videoId);
+            });
         });
-    </script>
+    }
+
+    // ========== PHÁT VIDEO (không QC, chạy nền) ==========
+    function playVideo(videoId) {
+        const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=0&loop=1&playlist=${videoId}&controls=1&modestbranding=1&rel=0&disablekb=1&iv_load_policy=3&fs=1`;
+        youtubePlayer.src = embedUrl;
+        playerSection.classList.add('active');
+        playerSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ========== ĐÓNG PLAYER ==========
+    closePlayer.addEventListener('click', () => {
+        youtubePlayer.src = 'about:blank';
+        playerSection.classList.remove('active');
+    });
+
+    // ========== HÀM TIỆN ÍCH ==========
+    function formatNumber(num) {
+        if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+        if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+        return num.toString();
+    }
+    
+    function formatDuration(seconds) {
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        if (hrs > 0) return `${hrs}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+        return `${mins}:${secs.toString().padStart(2,'0')}`;
+    }
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // ========== TÌM KIẾM CHÍNH ==========
+    async function performSearch() {
+        const query = searchInput.value.trim();
+        if (!query) {
+            resultsContainer.innerHTML = '<div class="loading">🔍 Nhập từ khóa để tìm kiếm...</div>';
+            return;
+        }
+        
+        resultsContainer.innerHTML = '<div class="loading">⏳ Đang tìm kiếm... vui lòng chờ</div>';
+        
+        const results = await searchYouTube(query, currentSearchType);
+        displayResults(results, currentSearchType);
+    }
+
+    // ========== SỰ KIỆN ==========
+    searchBtn.addEventListener('click', performSearch);
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') performSearch();
+    });
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentSearchType = btn.dataset.type;
+            if (searchInput.value.trim()) {
+                performSearch();
+            }
+        });
+    });
+    
+    // Tìm kiếm gợi ý ban đầu (optional)
+    // performSearch();
+</script>
 </body>
 </html>
